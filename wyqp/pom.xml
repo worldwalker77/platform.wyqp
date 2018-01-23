@@ -7,11 +7,10 @@
   <packaging>pom</packaging>
   <name>wyqp</name>
   <modules>
-  	<module>wyqp-web</module>
-  	<module>wyqp-server</module>
+    <module>wyqp-web</module>
+    <module>wyqp-server</module>
     <module>wyqp-common</module>
-    <module>wyqp-mj</module>
-    
+    <module>wyqp-mj</module>    
     <module>wyqp-nn</module>
     <module>wyqp-jh</module>
   </modules>
