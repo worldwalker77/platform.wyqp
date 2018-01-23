@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>cn.worldwalker.game.wyqp</groupId>
+    <artifactId>wyqp</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>cn.worldwalker.game.wyqp.web</groupId>
+  <artifactId>wyqp-web</artifactId>
+  <version>0.0.1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>wyqp-web Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>cn.worldwalker.game.wyqp.server</groupId>
+    	<artifactId>wyqp-server</artifactId>
+    	<version>0.0.1.0-SNAPSHOT</version>
+    </dependency>
+
+    
+  </dependencies>
+  <build>
+    <finalName>wyqp-web</finalName>
+  </build>
+  
+  <profiles>
+	<!--开发环境 -->
+	<profile>
+		<id>development</id>
+		<properties>
+			<!-- 日志路径 -->
+			<logpath>d:/Logs/wyqp</logpath>
+			<!-- 日志级别 -->
+			<loglevel>ERROR</loglevel>
+		</properties>
+	</profile>
+	<!--测试环境 -->
+	<profile>
+		<id>test</id>
+		<properties>
+			<!-- 日志路径 -->
+			<logpath>d:/Logs/wyqp</logpath>
+			<!-- 日志级别 -->
+			<loglevel>ERROR</loglevel>
+		</properties>
+	</profile>
+	<!--生产环境 -->
+	<profile>
+		<id>production</id>
+		<properties>
+			<!-- 日志路径 -->
+			<logpath>d:/Logs/wyqp</logpath>
+			<!-- 日志级别 -->
+			<loglevel>ERROR</loglevel>
+		</properties>
+	</profile>
+  </profiles>
+  
+</project>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.worldwalker.game.wyqp.common.dao.GameDao">
+	
+	
+	<resultMap id="gameModelResultMap" type="gameModel" >
+		<result column="proxy_id" property="proxyId"/>
+		<result column="player_id" property="playerId"/>
+		<result column="nick_name" property="nickName"/>
+		<result column="mobile_phone" property="mobilePhone"/>
+		<result column="wechat_num" property="wechatNum"/>
+		<result column="real_name" property="realName"/>
+		<result column="before_withdrawal_amount" property="beforeWithdrawalAmount"/>
+		<result column="withdrawal_amount" property="withdrawalAmount"/>
+		<result column="extract_amount" property="extractAmount"/>
+		<result column="remainder_amount" property="remainderAmount"/>
+		<result column="total_income" property="totalIncome"/>
+		<result column="password" property="password"/>
+		<result column="wx_pay_price" property="wxPayPrice"/>
+		<result column="create_time" property="createTime"/>
+		<result column="room_card_num" property="roomCardNum"/>
+		<result column="win_probability" property="winProbability"/>
+	</resultMap>
+	
+	
+	<insert id="insertProxy" parameterType="gameQuery">  
+	     <selectKey keyProperty="proxyId" resultType="Integer">  
+	         select LAST_INSERT_ID()  
+	     </selectKey>  
+	     insert into t_proxy( 
+		     					player_id, 
+		     					mobile_phone, 
+		     					password,
+		     					wechat_num,
+		     					create_time,
+		     					update_time
+	     					) 
+	     			values(  
+		     					#{playerId}, 
+		     					#{mobilePhone},
+		     					#{password},
+		     					#{wechatNum},
+		     					now(),
+		     					now()
+		     				)    
+    </insert>
+    
+    <update id="updateProxy"  parameterType="gameQuery">
+		 UPDATE t_proxy
+		 <trim prefix="set" suffixOverrides=",">
+		  <if test="mobilePhone!=null">mobile_phone=#{mobilePhone},</if>
+		  <if test="wechatNum!=null">wechat_num=#{wechatNum},</if>
+		  <if test="playerId!=null">player_id=#{playerId},</if>
+		  <if test="newPassword!=null">password=#{newPassword},</if>
+		 </trim>
+		 WHERE proxy_id=#{proxyId}
+	</update>
+    
+	<select id="getProxyInfo"  parameterType = "gameQuery" resultMap="gameModelResultMap">
+	    select total_income, extract_amount, remainder_amount
+	    from t_proxy
+	    where proxy_id = #{proxyId}
+	</select>
+	
+	<select id="getTotalIncome"  parameterType = "gameQuery" resultType="Long">
+	    select proxy_id, player_id, nick_name , mobile_phone, wechat_num
+	    from t_proxy
+	    where proxy_id = #{proxyId}
+	</select>
+	
+	<select id="getMyMembers"  parameterType = "gameQuery" resultMap="gameModelResultMap">
+	    select a.player_id, a.nick_name,b.proxy_id, a.create_time
+	    from t_proxy_user a left join t_proxy b on a.proxy_id = b.proxy_id
+	    where  1=1
+	    <if test="proxyId !=null ">  
+	       and a.proxy_id = #{proxyId}
+	    </if>
+	     and <![CDATA[ a.create_time >= #{startDate} and a.create_time <= #{endDate} ]]>
+	    order by create_time desc
+	    limit #{offset}, #{limit}
+	</select>
+	<select id="getMyMembersCount"  parameterType = "gameQuery" resultType="Long">
+	    select count(1)
+	    from t_proxy_user a left join t_proxy b on a.proxy_id = b.proxy_id
+	    where  1=1
+	    <if test="proxyId !=null ">  
+	       and a.proxy_id = #{proxyId}
+	    </if>
+	     and <![CDATA[ a.create_time >= #{startDate} and a.create_time <= #{endDate} ]]>
+	</select>
+	
+	<select id="getBillingDetails"  parameterType = "gameQuery" resultMap="gameModelResultMap">
+	   select a.player_id, a.nick_name, b.wx_pay_price, b.create_time
+	    from t_proxy_user a
+	    left join t_order b
+	    on a.player_id = b.player_id
+	    where 1=1
+	    <if test="proxyId !=null ">  
+	       and a.proxy_id = #{proxyId}
+	    </if>
+	    and b.pay_status = 1 and <![CDATA[ b.create_time >= #{startDate} and b.create_time <= #{endDate} ]]>
+	    order by create_time desc
+	    limit #{offset}, #{limit}
+	</select>
+	<select id="getBillingDetailsCount"  parameterType = "gameQuery" resultType="Long">
+	   select count(1)
+	    from t_proxy_user a
+	    left join t_order b
+	    on a.player_id = b.player_id
+	    where  1=1
+	    <if test="proxyId !=null ">  
+	       and a.proxy_id = #{proxyId}
+	    </if>
+	     and b.pay_status = 1 and <![CDATA[ b.create_time >= #{startDate} and b.create_time <= #{endDate} ]]>
+	</select>
+	
+	<select id="getWithDrawalRecords"  parameterType = "gameQuery" resultMap="gameModelResultMap">
+	    select before_withdrawal_amount, withdrawal_amount, create_time
+	    from t_proxy_withdrawal_log
+	    where  1=1
+	    <if test="proxyId !=null ">  
+	       and proxy_id = #{proxyId}
+	    </if>
+	     and <![CDATA[ create_time >= #{startDate} and create_time <= #{endDate} ]]>
+	    order by create_time desc
+	    limit #{offset}, #{limit}
+	</select>
+	<select id="getWithDrawalRecordsCount"  parameterType = "gameQuery" resultType="Long">
+	    select count(1)
+	    from t_proxy_withdrawal_log
+	    where   1=1
+	    <if test="proxyId !=null ">  
+	       and proxy_id = #{proxyId}
+	    </if>
+	     and <![CDATA[ create_time >= #{startDate} and create_time <= #{endDate} ]]>
+	</select>
+	
+	<select id="getProxyByPhoneAndPassword"  parameterType = "gameQuery" resultMap="gameModelResultMap">
+	    select proxy_id,player_id,nick_name,mobile_phone,wechat_num,real_name
+	    from t_proxy
+	    where mobile_phone = #{mobilePhone} and password = #{password}
+	    <if test="proxyId !=null ">  
+	       and proxy_id = #{proxyId}
+	    </if>
+	</select>
+	
+	
+	<select id="getUserByCondition"  parameterType = "gameQuery" resultMap="gameModelResultMap">
+	    select player_id,nick_name, room_card_num,win_probability
+	    from t_user
+	    where 1=1
+	    <if test="playerId !=null ">  
+	        and player_id = #{playerId} 
+	    </if>  
+	    <if test="proxyId !=null ">  
+	        and proxy_id = #{proxyId} 
+	    </if>
+	    <if test="nickName !=null and nickName !='' ">  
+	        and nick_name like CONCAT('%',#{nickName},'%') 
+	    </if>
+   	 	limit #{offset}, #{limit}
+	</select>
+	
+	<select id="getUserByConditionCount"  parameterType = "gameQuery" resultType="Long">
+	    select count(1)
+	    from t_user
+	    where 1=1
+	    <if test="playerId !=null ">  
+	        and player_id = #{playerId} 
+	    </if>  
+	    <if test="proxyId !=null ">  
+	        and proxy_id = #{proxyId} 
+	    </if>
+	    <if test="nickName !=null and nickName !='' ">  
+	        and nick_name like CONCAT('%',#{nickName},'%') 
+	    </if>
+	</select>
+	
+	<update id="updateRoomCardNumByPlayerId"  parameterType = "gameQuery">
+	    update t_user
+	    set room_card_num = room_card_num + #{changeRoomCardNum}
+	    where player_id = #{playerId} and room_card_num = #{roomCardNum}
+	</update>
+	
+	<update id="updateProbabilityByPlayerId"  parameterType = "gameQuery">
+	    update t_user
+	    set win_probability =  #{winProbability}
+	    where player_id = #{playerId}
+	</update>
+	
+	<select id="getProxys"  parameterType = "gameQuery" resultMap="gameModelResultMap">
+	    select proxy_id, real_name,wechat_num,mobile_phone,player_id,nick_name,create_time
+	    from t_proxy
+	    where  1=1
+	    <if test="proxyId !=null ">  
+	       and proxy_id = #{proxyId}
+	    </if>
+	     and <![CDATA[ create_time >= #{startDate} and create_time <= #{endDate} ]]>
+	    order by create_time desc
+	    limit #{offset}, #{limit}
+	</select>
+	<select id="getProxysCount"  parameterType = "gameQuery" resultType="Long">
+	    select count(1)
+	    from t_proxy
+	    where  1=1
+	    <if test="proxyId !=null ">  
+	       and proxy_id = #{proxyId}
+	    </if>
+	     and <![CDATA[ create_time >= #{startDate} and create_time <= #{endDate} ]]>
+	</select>
+
+</mapper>
+
+

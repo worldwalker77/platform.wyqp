@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.worldwalker.game.wyqp.common.dao.OrderDao">
+
+	<resultMap id="orderResultMap" type="cn.worldwalker.game.wyqp.common.domain.base.OrderModel" >
+		<result column="player_id" property="playerId"/>
+		<result column="order_id" property="orderId"/>
+		<result column="product_id" property="productId"/>
+		<result column="room_card_num" property="roomCardNum"/>
+		<result column="price" property="price"/>
+		<result column="wx_pay_price" property="wxPayPrice"/>
+		<result column="transaction_id" property="transactionId"/>
+		<result column="pay_status" property="payStatus"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+    <insert id="insertOrder" parameterType="cn.worldwalker.game.wyqp.common.domain.base.OrderModel">  
+	     <!-- 使用这种方式要注意，resultType是要设置的，否则将抛异常，该值对应的User类中的主键类型 -->  
+	     <!-- keyProperty对应的是UserModel类中的主键名，假设取名为user_id，则这边也要改成user_id -->  
+	     <selectKey keyProperty="orderId" resultType="Long">  
+	         select LAST_INSERT_ID()  
+	     </selectKey>  
+	     insert into t_order( 
+	     					player_id, 
+	     					product_id, 
+	     					room_card_num, 
+	     					price,
+	     					create_time,
+	     					update_time
+	     				   ) 
+	     			values( 
+	     					#{playerId}, 
+	     					#{productId}, 
+	     					#{roomCardNum}, 
+	     					#{price}, 
+	     					now(), 
+	     					now()
+	     				  )    
+    </insert>  
+	
+	
+	<update id="updateOrder"  parameterType = "cn.worldwalker.game.wyqp.common.domain.base.OrderModel">
+		update t_order 
+		set wx_pay_price = #{wxPayPrice}, transaction_id = #{transactionId} ,pay_status = 1, update_time = now()
+		where order_id = #{orderId}
+	</update>
+	
+	
+	<select id="getOderByOrderId"  parameterType = "Long" resultMap="orderResultMap">
+	    select player_id, room_card_num, pay_status  from t_order where order_id = #{orderId}
+	</select>
+	
+</mapper>
+
+

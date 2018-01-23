@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.worldwalker.game.wyqp.common.dao.UserDao">
+	
+	<resultMap id="userResultMap" type="cn.worldwalker.game.wyqp.common.domain.base.UserModel" >
+		<result column="player_id" property="playerId"/>
+		<result column="nick_name" property="nickName"/>
+		<result column="head_img_url" property="headImgUrl"/>
+		<result column="wx_open_id" property="wxOpenId"/>
+		<result column="room_card_num" property="roomCardNum"/>
+		<result column="user_level" property="userLevel"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="win_probability" property="winProbability"/>
+	</resultMap>
+	
+	<select id="getUserByWxOpenId"  parameterType = "String" resultMap="userResultMap">
+	    select player_id, room_card_num, user_level,win_probability from t_user where wx_open_id = #{wxOpenId} limit 1
+	</select>
+	
+	<select id="getUserById"  parameterType = "Long" resultMap="userResultMap">
+	    select room_card_num, update_time from t_user where player_id = #{playerId}
+	</select>
+	
+	<update id="deductRoomCard"  parameterType = "map">
+		update t_user 
+		set room_card_num = room_card_num - #{deductNum}, update_time = now() 
+		where player_id = #{playerId} and room_card_num = #{roomCardNum} and update_time = #{updateTime}
+	</update>
+	
+	<update id="addRoomCard"  parameterType = "map">
+		update t_user 
+		set room_card_num = room_card_num + #{addNum}, update_time = now() 
+		where player_id = #{playerId}
+	</update>
+	
+    <insert id="insertUser" parameterType="cn.worldwalker.game.wyqp.common.domain.base.UserModel">  
+	     <!-- 使用这种方式要注意，resultType是要设置的，否则将抛异常，该值对应的User类中的主键类型 -->  
+	     <!-- keyProperty对应的是UserModel类中的主键名，假设取名为user_id，则这边也要改成user_id -->  
+	     <selectKey keyProperty="playerId" resultType="Integer">  
+	         select LAST_INSERT_ID()  
+	     </selectKey>  
+	     insert into t_user( nick_name, 
+	     					head_img_url, 
+	     					wx_open_id,
+	     					room_card_num,
+	     					create_time,
+	     					update_time) 
+	     			values( #{nickName}, 
+	     					#{headImgUrl}, 
+	     					#{wxOpenId}, 
+	     					#{roomCardNum}, 
+	     					now(), 
+	     					now())    
+    </insert>  
+
+</mapper>
+
+

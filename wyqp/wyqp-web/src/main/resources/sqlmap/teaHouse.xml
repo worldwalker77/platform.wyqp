@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.worldwalker.game.wyqp.common.dao.TeaHouseDao">
+	
+	
+	<resultMap id="teaHouseModelResultMap" type="teaHouseModel" >
+		<result column="id" property="id"/>
+		<result column="tea_house_id" property="teaHouseId"/>
+		<result column="tea_house_type_id" property="teaHouseTypeId"/>
+		<result column="tea_house_num" property="teaHouseNum"/>
+		<result column="player_id" property="playerId"/>
+		<result column="nick_name" property="nickName"/>
+		<result column="status" property="status"/>
+		<result column="game_type" property="gameType"/>
+		<result column="total_game" property="totalGame"/>
+		<result column="room_banker_type" property="roomBankerType"/>
+		<result column="multiple_limit" property="multipleLimit"/>
+		<result column="pay_type" property="payType"/>
+		<result column="tea_house_owner_word" property="teaHouseOwnerWord"/>
+		<result column="buttom_score_type" property="buttomScoreType"/>
+		<result column="is_need_audit" property="isNeedAudit"/>
+		<result column="is_dian_xiaoer" property="isDianXiaoer"/>
+	</resultMap>
+	
+	<insert id="insertTeaHouseUser" parameterType="teaHouseModel">  
+	     <selectKey keyProperty="id" resultType="Integer">  
+	         select LAST_INSERT_ID()  
+	     </selectKey>  
+	     insert into t_tea_house_user( 
+		     					tea_house_num, 
+		     					player_id, 
+		     					nick_name,
+		     					status,
+		     					create_time,
+		     					update_time
+	     					) 
+	     			values(  
+		     					#{teaHouseNum}, 
+		     					#{playerId},
+		     					#{nickName},
+		     					#{status},
+		     					now(),
+		     					now()
+		     				)    
+    </insert>
+	
+	<insert id="insertTeaHouse" parameterType="teaHouseModel">  
+	     <selectKey keyProperty="teaHouseId" resultType="Integer">  
+	         select LAST_INSERT_ID()  
+	     </selectKey>  
+	     insert into t_tea_house( 
+		     					tea_house_type_id, 
+		     					tea_house_num, 
+		     					player_id,
+		     					nick_name,
+		     					tea_house_owner_word,
+		     					create_time,
+		     					update_time
+	     					) 
+	     			values(  
+		     					#{teaHouseTypeId}, 
+		     					#{teaHouseNum},
+		     					#{playerId},
+		     					#{nickName},
+		     					#{teaHouseOwnerWord},
+		     					now(),
+		     					now()
+		     				)    
+    </insert>
+    
+	<insert id="insertTeaHouseType" parameterType="teaHouseModel">  
+	     <selectKey keyProperty="teaHouseTypeId" resultType="Integer">  
+	         select LAST_INSERT_ID()  
+	     </selectKey>  
+	     insert into t_tea_house_type( 
+		     					game_type, 
+		     					total_game, 
+		     					room_banker_type,
+		     					multiple_limit,
+		     					pay_type,
+		     					buttom_score_type,
+		     					create_time,
+		     					update_time
+	     					) 
+	     			values(  
+		     					#{gameType}, 
+		     					#{totalGame},
+		     					#{roomBankerType},
+		     					#{multipleLimit},
+		     					#{payType},
+		     					#{buttomScoreType},
+		     					now(),
+		     					now()
+		     				)    
+    </insert>
+    
+    <update id="auditTeaHouseUser" parameterType="teaHouseModel">
+	    update t_tea_house_user
+	    set  status=#{status}
+	    where 
+	    player_id=#{playerId} and tea_house_num=#{teaHouseNum}
+	 </update>
+	 
+	 <delete id="deleteTeaHouseUserByCondition"  parameterType="teaHouseModel">
+		 delete from t_tea_house_user
+		 WHERE 1 = 1 and
+		 tea_house_num=#{teaHouseNum}
+		 <if test="playerId !=null"> and player_id=#{playerId}</if>
+	</delete>
+	
+	<delete id="deleteTeaHouseByCondition"  parameterType="teaHouseModel">
+		 delete from t_tea_house
+		 WHERE 1 = 1
+		 and tea_house_num=#{teaHouseNum}
+		 <if test="playerId !=null"> and player_id=#{playerId}</if>
+	</delete>
+    
+    
+	<select id="getTeaHousePlayerList"  parameterType = "teaHouseModel" resultMap="teaHouseModelResultMap">
+	    select player_id,nick_name,create_time,is_dian_xiaoer
+	    from t_tea_house_user
+	    where tea_house_num = #{teaHouseNum} and status=1
+	    limit 100
+	</select>
+	<select id="getPlayerTeaHouseList"  parameterType = "teaHouseModel" resultMap="teaHouseModelResultMap">
+	    select a.tea_house_id,a.tea_house_name,a.tea_house_num,a.create_time,a.player_id,a.nick_name,
+	    b.game_type,b.total_game,b.room_banker_type,b.multiple_limit,b.pay_type,b.buttom_score_type
+	    from t_tea_house a left join t_tea_house_type b
+	    on a.tea_house_type_id = b.tea_house_type_id
+	    where a.player_id = #{playerId}
+	    <if test="teaHouseTypeId != null"> and a.tea_house_type_id=#{teaHouseTypeId}</if>
+	    limit 25
+	</select>
+	
+	<select id="getPlayerJoinedTeaHouseList"  parameterType = "teaHouseModel" resultMap="teaHouseModelResultMap">
+	    select a.tea_house_num,b.player_id,b.nick_name,a.status,c.game_type,c.total_game,c.room_banker_type,c.multiple_limit,c.pay_type,c.buttom_score_type
+	    from t_tea_house_user a 
+	    left join t_tea_house b on a.tea_house_num = b.tea_house_num
+	    left join t_tea_house_type c on b.tea_house_type_id = c.tea_house_type_id
+	    where a.player_id = #{playerId} and a.status = 1
+	    limit 25
+	</select>
+	
+	<select id="getNeedAuditPlayerList"  parameterType = "teaHouseModel" resultMap="teaHouseModelResultMap">
+	    select b.player_id,b.nick_name,b.head_img_url,b.status
+	    from t_tea_house a left join t_tea_house_user b
+	    on a.tea_house_num = b.tea_house_num
+	    where a.tea_house_num = #{teaHouseNum} and b.status = 0
+	    limit 25
+	</select>
+	
+	<select id="getTeaHouseTypeByTeaHouseNum"  parameterType = "teaHouseModel" resultMap="teaHouseModelResultMap">
+	    select b.*,a.tea_house_owner_word,a.tea_house_num,a.player_id
+	    from t_tea_house a left join t_tea_house_type b
+	    on a.tea_house_type_id = b.tea_house_type_id
+	    where a.tea_house_num = #{teaHouseNum}
+	</select>
+	
+	<select id="getTeaHouseByTeaHouseNum"  parameterType = "teaHouseModel" resultMap="teaHouseModelResultMap">
+	    select tea_house_owner_word,tea_house_num,player_id,is_need_audit
+	    from t_tea_house
+	    where tea_house_num = #{teaHouseNum}
+	</select>
+	
+	<select id="getTeaHouseTypeByCondition"  parameterType = "teaHouseModel" resultMap="teaHouseModelResultMap">
+	    select tea_house_type_id
+	    from t_tea_house_type
+	    where 1=1
+	    <if test="gameType != null"> and game_type=#{gameType}</if>
+		<if test="totalGame != null"> and total_game=#{totalGame}</if>
+		<if test="roomBankerType != null"> and room_banker_type=#{roomBankerType}</if>
+		<if test="multipleLimit != null"> and multiple_limit=#{multipleLimit}</if>
+		<if test="payType != null"> and pay_type=#{payType}</if>
+		<if test="buttomScoreType != null"> and buttom_score_type=#{buttomScoreType}</if>
+	</select>
+	
+	<select id="getTeaHouseUserByCondition"  parameterType = "teaHouseModel" resultMap="teaHouseModelResultMap">
+	    select tea_house_num,is_dian_xiaoer
+	    from t_tea_house_user
+	    where 1=1
+	    <if test="teaHouseNum != null"> and tea_house_num=#{teaHouseNum}</if>
+		<if test="playerId != null"> and player_id=#{playerId}</if>
+	</select>
+	
+	<select id="getTeaHouseByCondition"  parameterType = "teaHouseModel" resultMap="teaHouseModelResultMap">
+	    select tea_house_num,tea_house_name,tea_house_type_id,player_id
+	    from t_tea_house
+	    where 1=1
+	    <if test="teaHouseNum != null"> and tea_house_num=#{teaHouseNum}</if>
+		<if test="playerId != null"> and player_id=#{playerId}</if>
+	</select>
+	
+	<select id="updateTeaHouseByCondition"  parameterType = "teaHouseModel" >
+	    update t_tea_house
+	    set tea_house_owner_word = #{teaHouseOwnerWord},is_need_audit = #{isNeedAudit}
+	    where 1=1
+	    and tea_house_num=#{teaHouseNum}
+		<if test="playerId != null"> and player_id=#{playerId}</if>
+	</select>
+	
+	<select id="updateTeaHouseUserByCondition"  parameterType = "teaHouseModel" >
+	    update t_tea_house_user
+	    set is_dian_xiaoer = #{isDianXiaoer}
+	    where 1=1
+	    <if test="teaHouseNum != null"> and tea_house_num=#{teaHouseNum}</if>
+		<if test="playerId != null"> and player_id=#{playerId}</if>
+	</select>
+	
+</mapper>
+
+

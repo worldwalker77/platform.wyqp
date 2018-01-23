@@ -1,0 +1,23 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- pool配置 -->  
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+        <property name="maxTotal" value="${redis.maxTotal}" />  
+        <property name="maxIdle" value="${redis.maxIdle}" />  
+        <property name="maxWaitMillis" value="${redis.maxWaitMillis}" />  
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" />  
+    </bean>  
+    <!-- jedis pool配置 -->  
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool">  
+        <constructor-arg index="0" ref="jedisPoolConfig" />  
+        <constructor-arg index="1" type="java.lang.String" value="${redis.host}" />  
+        <constructor-arg index="2" type="int" value="${redis.port}" /> 
+        <constructor-arg index="3" type="int" value="${redis.timeout}" /> 
+        <constructor-arg index="4" type="java.lang.String" value="${redis.password}" />  
+    </bean>  
+	<bean id="jedisTemplate" class="cn.worldwalker.game.wyqp.common.utils.redis.JedisTemplate">
+		<constructor-arg index="0" ref="jedisPool"></constructor-arg>
+	</bean>
+</beans>

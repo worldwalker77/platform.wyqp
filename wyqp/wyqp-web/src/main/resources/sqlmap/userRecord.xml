@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.worldwalker.game.wyqp.common.dao.UserRecordDao">
+	
+	<resultMap id="userRecordResultMap" type="cn.worldwalker.game.wyqp.common.domain.base.UserRecordModel" >
+		<id column="id" property="id"/>
+		<result column="player_id" property="playerId"/>
+		<result column="nick_name" property="nickName"/>
+		<result column="head_img_url" property="headImgUrl"/>
+		<result column="game_type" property="gameType"/>
+		<result column="room_id" property="roomId"/>
+		<result column="pay_type" property="payType"/>
+		<result column="total_games" property="totalGames"/>
+		<result column="score" property="score"/>
+		<result column="record_info" property="recordInfo"/>
+		<result column="remark" property="remark"/>
+		<result column="create_time" property="createTime"/>
+		<result column="total_score" property="totalScore"/>
+	</resultMap>
+	
+	 <insert id="insertRecord" parameterType="cn.worldwalker.game.wyqp.common.domain.base.UserRecordModel">  
+	     <!-- 使用这种方式要注意，resultType是要设置的，否则将抛异常，该值对应的User类中的主键类型 -->  
+	     <!-- keyProperty对应的是UserModel类中的主键名，假设取名为user_id，则这边也要改成user_id -->  
+	     <selectKey keyProperty="id" resultType="Long">  
+	         select LAST_INSERT_ID()  
+	     </selectKey>  
+	     insert into t_user_record( 
+	     					player_id, 
+	     					nick_name,
+	     					head_img_url,
+	     					game_type,
+	     					room_id,
+	     					pay_type,
+	     					total_games,
+	     					score, 
+	     					record_info,
+	     					remark,
+	     					create_time) 
+	     			values(  
+	     					#{playerId}, 
+	     					#{nickName}, 
+	     					#{headImgUrl}, 
+	     					#{gameType},
+	     					#{roomId}, 
+	     					#{payType},
+	     					#{totalGames},
+	     					#{score},
+	     					#{recordInfo},
+	     					#{remark},
+	     					#{createTime})    
+    </insert> 
+    <insert id="batchInsertRecord" parameterType="java.util.List">  
+        insert into t_user_record ( 
+	     					player_id, 
+	     					nick_name,
+	     					head_img_url,
+	     					game_type,
+	     					room_id,
+	     					tea_house_num,
+	     					table_num,
+	     					pay_type,
+	     					total_games,
+	     					score,
+	     					record_info,
+	     					remark,
+	     					create_time)  
+        values  
+        <foreach collection="list" item="item" index="index" separator="," >  
+            (#{item.playerId},#{item.nickName},#{item.headImgUrl},#{item.gameType},#{item.roomId},#{item.teaHouseNum},#{item.tableNum},#{item.payType},#{item.totalGames},#{item.score},#{item.recordInfo},#{item.remark},#{item.createTime})  
+        </foreach>  
+    </insert>  
+     
+    <select id="getUserRecord"  parameterType = "cn.worldwalker.game.wyqp.common.domain.base.UserRecordModel" resultMap="userRecordResultMap">
+	    select tea_house_num,table_num,room_id,create_time, record_info, remark from t_user_record 
+	    where player_id = #{playerId} and game_type = #{gameType} order by create_time desc limit 20
+	</select>
+	
+	<select id="getTeaHouseRecord"  parameterType = "cn.worldwalker.game.wyqp.common.domain.base.UserRecordModel" resultMap="userRecordResultMap">
+	    select distinct room_id,tea_house_num,table_num, record_info, remark,create_time from t_user_record 
+	    where tea_house_num = #{teaHouseNum} order by create_time desc limit 20
+	</select>
+	
+	<select id="getMyTeaHouseRecord"  parameterType = "cn.worldwalker.game.wyqp.common.domain.base.UserRecordModel" resultMap="userRecordResultMap">
+	    select room_id,tea_house_num,table_num, record_info, remark,create_time from t_user_record 
+	    where tea_house_num = #{teaHouseNum} and player_id=#{playerId} order by create_time desc limit 20
+	</select>
+	
+	<select id="getTeaHouseBigWinner"  parameterType = "cn.worldwalker.game.wyqp.common.domain.base.UserRecordModel" resultMap="userRecordResultMap">
+	    select player_id,nick_name,head_img_url,sum(score) as total_score
+	    from t_user_record 
+	    where tea_house_num = #{teaHouseNum}
+	    group by player_id
+	    order by total_score desc limit 20
+	</select>
+	
+	<select id="getPaishenBoard"  parameterType = "cn.worldwalker.game.wyqp.common.domain.base.UserRecordModel" resultMap="userRecordResultMap">
+	    select player_id,nick_name,head_img_url,sum(score) as total_score
+	    from t_user_record 
+	    group by player_id
+	    order by total_score desc limit 20
+	</select>
+	
+	
+</mapper>
+
+

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.worldwalker.game.wyqp.common.dao.VersionDao">
+
+	<resultMap id="versionResultMap" type="cn.worldwalker.game.wyqp.common.backend.VersionModel" >
+		<id column="id" property="id"/>
+		<result column="code_url" property="codeUrl"/>
+		<result column="update_url" property="updateUrl"/>
+		<result column="new_feature" property="newFeature"/>
+		<result column="client_version" property="clientVersion"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+	<select id="selectVersionList"  parameterType ="cn.worldwalker.game.wyqp.common.backend.VersionModel" resultMap="versionResultMap">
+	    select code_url, update_url, new_feature,client_version, create_time,update_time from t_version 
+	    limit #{start}, #{limit}
+	</select>
+	
+	<select id="selectVersionListCount"  parameterType ="cn.worldwalker.game.wyqp.common.backend.VersionModel" resultType="Long">
+	    select count(1) from t_version
+	</select>
+	
+	<select id="selectVersion"  parameterType ="cn.worldwalker.game.wyqp.common.backend.VersionModel" resultMap="versionResultMap">
+	    select id, code_url, update_url from t_version 
+	    limit 1
+	</select>
+	
+	<update id="updateVersion"  parameterType = "cn.worldwalker.game.wyqp.common.backend.VersionModel">
+		update t_version 
+		set code_url = #{codeUrl}, update_url = #{updateUrl} ,new_feature=#{newFeature},client_version=#{clientVersion},update_time=now()
+		where id = #{id}
+	</update>
+	
+	<insert id="insertVersion" parameterType="cn.worldwalker.game.wyqp.common.backend.VersionModel">  
+	     <!-- 使用这种方式要注意，resultType是要设置的，否则将抛异常，该值对应的User类中的主键类型 -->  
+	     <!-- keyProperty对应的是ProxyModel类中的主键名，假设取名为user_id，则这边也要改成user_id -->  
+	     <selectKey keyProperty="id" resultType="Integer">  
+	         select LAST_INSERT_ID()  
+	     </selectKey>  
+	     insert into t_version( 
+		     					code_url, 
+		     					update_url,
+		     					new_feature, 
+		     					client_version,
+		     					create_time,
+		     					update_time
+	     					) 
+	     			values(  
+		     					#{codeUrl}, 
+		     					#{updateUrl}, 
+		     					#{newFeature},
+		     					#{clientVersion},
+		     					now(),
+		     					now()
+		     				)    
+    </insert>
+
+</mapper>
+
+

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:task="http://www.springframework.org/schema/task"  
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.2.xsd
+http://www.springframework.org/schema/task  
+http://www.springframework.org/schema/task/spring-task-3.0.xsd  
+">
+	<bean id="offlinePlayerCleanJob" class="cn.worldwalker.game.wyqp.web.job.OfflinePlayerCleanJob">  
+    </bean> 
+    
+    <bean id="roomInfoCleanJob" class="cn.worldwalker.game.wyqp.web.job.RoomInfoCleanJob">  
+    </bean>
+    
+    <bean id="roomCardOperationFailProcessJob" class="cn.worldwalker.game.wyqp.web.job.RoomCardOperationFailProcessJob">  
+    </bean>
+	
+	<task:scheduler id="scheduler" pool-size="3"/>  
+	
+    <!-- <task:scheduled-tasks scheduler="scheduler">
+    	<task:scheduled ref="offlinePlayerCleanJob" method="doTask" cron="0 0/2 * * * ?"/>
+    </task:scheduled-tasks> -->
+    
+    <task:scheduled-tasks scheduler="scheduler">
+    	<task:scheduled ref="roomInfoCleanJob" method="doTask" cron="0 0/2 * * * ?"/>
+    </task:scheduled-tasks>
+    
+    <task:scheduled-tasks scheduler="scheduler">
+    	<task:scheduled ref="roomCardOperationFailProcessJob" method="doTask" cron="0 0/10 * * * ?"/>
+    </task:scheduled-tasks>
+    
+    <task:scheduled-tasks scheduler="scheduler">
+    	<task:scheduled ref="accessTokenRefreshJob" method="doTask"  cron="0 0 0/2 * * ?"/>
+    </task:scheduled-tasks>
+    
+    <task:scheduled-tasks scheduler="scheduler">
+    	<task:scheduled ref="userInfoOverTimeCleanJob" method="doTask"  cron="0 0/10 * * * ?"/>
+    </task:scheduled-tasks>
+    
+    <!-- 牛牛/金花超时自动准备 -->
+    <task:scheduled-tasks scheduler="scheduler">
+    	<task:scheduled ref="readyOverTimeNoticeJob" method="doTask"  cron="0/5 * * * * ?"/>
+    </task:scheduled-tasks>
+    <!-- 牛牛超时自动抢庄 -->
+    <task:scheduled-tasks scheduler="scheduler">
+    	<task:scheduled ref="nnRobBankerOverTimeNoticeJob" method="doTask"  cron="0/5 * * * * ?"/>
+    </task:scheduled-tasks>
+    <!-- 牛牛超时自动压分 -->
+    <task:scheduled-tasks scheduler="scheduler">
+    	<task:scheduled ref="nnStakeScoreOverTimeNoticeJob" method="doTask"  cron="0/5 * * * * ?"/>
+    </task:scheduled-tasks>
+    <!-- 牛牛超时自动翻牌 -->
+    <task:scheduled-tasks scheduler="scheduler">
+    	<task:scheduled ref="nnShowCardOverTimeNoticeJob" method="doTask"  cron="0/5 * * * * ?"/>
+    </task:scheduled-tasks>
+    <!-- 金花超时自动压分（最低分） -->
+    <task:scheduled-tasks scheduler="scheduler">
+    	<task:scheduled ref="jhNoOperationOverTimeNoticeJob" method="doTask"  cron="0/30 * * * * ?"/>
+    </task:scheduled-tasks>
+     
+</beans>
