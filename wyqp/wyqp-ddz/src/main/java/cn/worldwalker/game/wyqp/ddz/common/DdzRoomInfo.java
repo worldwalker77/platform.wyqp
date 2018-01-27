@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DdzRoomInfo extends BaseRoomInfo{
 
-    private List<DdzPlayerInfo> playerInfoList = new ArrayList<>(3);
+    private List<DdzPlayerInfo> playerList = new ArrayList<>(3);
     private GameStatusEnum gameStatusEnum = GameStatusEnum.WAIT;
     private Integer curLord = 0;
     private Integer curPlayer = 0;
@@ -16,12 +16,13 @@ public class DdzRoomInfo extends BaseRoomInfo{
     private Integer curCardsOwner = 0;
 
 
-    public List<DdzPlayerInfo> getPlayerInfoList() {
-        return playerInfoList;
+    @Override
+    public List<DdzPlayerInfo> getPlayerList() {
+        return playerList;
     }
 
-    public void setPlayerInfoList(List<DdzPlayerInfo> playerInfoList) {
-        this.playerInfoList = playerInfoList;
+    public void setPlayerList(List<DdzPlayerInfo> playerList) {
+        this.playerList = playerList;
     }
 
     public GameStatusEnum getGameStatusEnum() {

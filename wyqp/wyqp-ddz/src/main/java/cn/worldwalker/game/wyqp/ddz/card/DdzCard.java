@@ -6,6 +6,10 @@ package cn.worldwalker.game.wyqp.ddz.card;
 public class DdzCard implements Comparable<DdzCard>{
     private int value;
 
+    public DdzCard(){
+
+    }
+
     public DdzCard(int value) {
         this.value = value;
     }

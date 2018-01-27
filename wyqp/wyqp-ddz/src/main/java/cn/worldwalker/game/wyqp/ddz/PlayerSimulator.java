@@ -41,6 +41,7 @@ public class PlayerSimulator implements Runnable{
                         roomInfo.getCurCardsOwner() == playerInfo.getPlayerId()){
                     playCardList = cardUnions.get(random.nextInt(cardUnions.size())).generateCardList();
                 }else {
+                    int x =0;
                     CardUnion curCardUnion = typeHandlerService.getCardType(roomInfo.getCurCards());
                     for (CardUnion cardUnion: cardUnions){
                         if (cardUnion.getType().equals(curCardUnion.getType())

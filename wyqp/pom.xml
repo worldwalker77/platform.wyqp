@@ -250,7 +250,7 @@
         <groupId>com.github.junrar</groupId>  
         <artifactId>junrar</artifactId>  
         <version>0.7</version>  
-    </dependency> 
+    </dependency>
   </dependencies>
   <build>
 		<plugins>

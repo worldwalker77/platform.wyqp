@@ -1,8 +1,9 @@
 package cn.worldwalker.game.wyqp.common.result;
 
-import java.io.Serializable;
-
+import cn.worldwalker.game.wyqp.common.domain.base.BaseRequest;
 import cn.worldwalker.game.wyqp.common.exception.ExceptionEnum;
+
+import java.io.Serializable;
 
 
 public class Result implements Serializable{
@@ -40,6 +41,11 @@ public class Result implements Serializable{
 		this.msgType = msgType;
 		this.gameType = gameType;
 	}
+
+	public Result(BaseRequest request){
+	    this.gameType = request.getGameType();
+	    this.msgType = request.getMsgType();
+    }
 	
 	public Result(){
 		

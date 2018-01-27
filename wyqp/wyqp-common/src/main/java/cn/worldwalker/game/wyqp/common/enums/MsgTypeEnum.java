@@ -88,8 +88,18 @@ public enum MsgTypeEnum {
 	manualCardsCompare(302, "局中发起比牌"),
 	watchCards(303, "看牌"),
 	discardCards(304, "弃牌"),
-	notReadyTimer(305, "未准备玩家计时器");
-	
+	notReadyTimer(305, "未准备玩家计时器"),
+
+	/*斗地主特有 400-499*/
+	callLandlord(401,"叫地主"),
+    noCallLandlord(402,"不叫地主"),
+    dealRestCard(403, "发底牌"),
+	ddzPlay(404,"出牌"),
+    ddzPass(405,"过"),
+    ddzCue(406,"提示"),
+
+    MAX(9999, "界限");
+
 	public int msgType;
 	public String desc;
 	

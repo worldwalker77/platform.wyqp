@@ -1,5 +1,6 @@
 package cn.worldwalker.game.wyqp.ddz.service;
 
+import cn.worldwalker.game.wyqp.common.enums.PlayerStatusEnum;
 import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
 import cn.worldwalker.game.wyqp.ddz.common.DdzPlayerInfo;
 import cn.worldwalker.game.wyqp.ddz.common.DdzRoomInfo;
@@ -23,7 +24,7 @@ public class RoomService {
 
     public void dealCard(DdzRoomInfo ddzRoomInfo){
         if (GameStatusEnum.WAIT.equals(ddzRoomInfo.getGameStatusEnum())){
-            List playerList = ddzRoomInfo.getPlayerInfoList();
+            List playerList = ddzRoomInfo.getPlayerList();
             if (playerList.size() != 3){
                 throw new IllegalArgumentException("num of players is" + playerList.size());
             }
@@ -48,7 +49,24 @@ public class RoomService {
     }
 
     public void dealRestCard(){
+    }
 
+    public DdzPlayerInfo getPlayerInfo(DdzRoomInfo ddzRoomInfo, Integer playerId){
+        for (DdzPlayerInfo ddzPlayerInfo : ddzRoomInfo.getPlayerList()){
+            if (playerId.equals(ddzPlayerInfo.getPlayerId())){
+                return ddzPlayerInfo;
+            }
+        }
+        return null;
+    }
+
+    public boolean isAllPlayerReady(DdzRoomInfo ddzRoomInfo){
+        for (DdzPlayerInfo ddzPlayerInfo : ddzRoomInfo.getPlayerList()){
+            if (!ddzPlayerInfo.getStatus().equals(PlayerStatusEnum.ready.status)){
+                return false;
+            }
+        }
+        return true;
     }
 
     public void start(){

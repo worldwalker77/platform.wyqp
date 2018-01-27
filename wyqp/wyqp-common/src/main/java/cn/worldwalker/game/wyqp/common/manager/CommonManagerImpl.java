@@ -1,38 +1,7 @@
 package cn.worldwalker.game.wyqp.common.manager;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import cn.worldwalker.game.wyqp.common.dao.OrderDao;
-import cn.worldwalker.game.wyqp.common.dao.ProductDao;
-import cn.worldwalker.game.wyqp.common.dao.ProxyDao;
-import cn.worldwalker.game.wyqp.common.dao.RoomCardLogDao;
-import cn.worldwalker.game.wyqp.common.dao.TeaHouseDao;
-import cn.worldwalker.game.wyqp.common.dao.UserDao;
-import cn.worldwalker.game.wyqp.common.dao.UserFeedbackDao;
-import cn.worldwalker.game.wyqp.common.dao.UserRecordDao;
-import cn.worldwalker.game.wyqp.common.dao.VersionDao;
-import cn.worldwalker.game.wyqp.common.domain.base.BasePlayerInfo;
-import cn.worldwalker.game.wyqp.common.domain.base.BaseRoomInfo;
-import cn.worldwalker.game.wyqp.common.domain.base.OrderModel;
-import cn.worldwalker.game.wyqp.common.domain.base.ProductModel;
-import cn.worldwalker.game.wyqp.common.domain.base.ProxyModel;
-import cn.worldwalker.game.wyqp.common.domain.base.RecordModel;
-import cn.worldwalker.game.wyqp.common.domain.base.RoomCardLogModel;
-import cn.worldwalker.game.wyqp.common.domain.base.TeaHouseModel;
-import cn.worldwalker.game.wyqp.common.domain.base.UserFeedbackModel;
-import cn.worldwalker.game.wyqp.common.domain.base.UserModel;
-import cn.worldwalker.game.wyqp.common.domain.base.UserRecordModel;
+import cn.worldwalker.game.wyqp.common.dao.*;
+import cn.worldwalker.game.wyqp.common.domain.base.*;
 import cn.worldwalker.game.wyqp.common.enums.GameTypeEnum;
 import cn.worldwalker.game.wyqp.common.enums.PlayerStatusEnum;
 import cn.worldwalker.game.wyqp.common.enums.RoomCardConsumeEnum;
@@ -40,6 +9,14 @@ import cn.worldwalker.game.wyqp.common.enums.RoomCardOperationEnum;
 import cn.worldwalker.game.wyqp.common.exception.BusinessException;
 import cn.worldwalker.game.wyqp.common.exception.ExceptionEnum;
 import cn.worldwalker.game.wyqp.common.utils.JsonUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 @Component
 public class CommonManagerImpl implements CommonManager{
 	

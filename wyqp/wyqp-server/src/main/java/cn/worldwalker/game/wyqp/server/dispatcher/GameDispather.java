@@ -1,16 +1,5 @@
 package cn.worldwalker.game.wyqp.server.dispatcher;
 
-import io.netty.channel.ChannelHandlerContext;
-
-import javax.annotation.Resource;
-
-import net.sf.json.JSONObject;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import cn.worldwalker.game.wyqp.common.channel.ChannelContainer;
 import cn.worldwalker.game.wyqp.common.domain.base.BaseRequest;
 import cn.worldwalker.game.wyqp.common.domain.jh.JhRequest;
@@ -20,6 +9,16 @@ import cn.worldwalker.game.wyqp.common.enums.GameTypeEnum;
 import cn.worldwalker.game.wyqp.common.exception.BusinessException;
 import cn.worldwalker.game.wyqp.common.exception.ExceptionEnum;
 import cn.worldwalker.game.wyqp.common.utils.JsonUtil;
+import cn.worldwalker.game.wyqp.ddz.common.DdzRequest;
+import com.alibaba.fastjson.JSON;
+import io.netty.channel.ChannelHandlerContext;
+import net.sf.json.JSONObject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 
 @Service
@@ -35,6 +34,8 @@ public class GameDispather {
 	private BaseMsgDisPatcher commonMsgDispatcher;
 	@Resource(name="jhMsgDispatcher")
 	private BaseMsgDisPatcher jhMsgDispatcher;
+	@Resource(name="ddzMsgDispatcher")
+    private BaseMsgDisPatcher ddzMsgDispatcher;
 	public void gameProcess(ChannelHandlerContext ctx, String textMsg){
 		JSONObject obj = JSONObject.fromObject(textMsg);
 		Integer gameType = obj.getInt("gameType");
@@ -94,6 +95,10 @@ public class GameDispather {
 					}
 					jhMsgDispatcher.textMsgProcess(ctx, request);
 					break;
+                case ddz:
+                    request = JSON.parseObject(textMsg,DdzRequest.class);
+                    ddzMsgDispatcher.textMsgProcess(ctx,request);
+                    break;
 				default:
 					channelContainer.sendErrorMsg(ctx, ExceptionEnum.PARAMS_ERROR, request);
 					break;
