@@ -30,19 +30,19 @@ public class PlayerSimulator implements Runnable{
 
     @Override
     public void run() {
-        while (GameStatusEnum.RUN.equals(roomInfo.getGameStatusEnum())){
-            if (playerInfo.getPlayerId().equals(roomInfo.getCurPlayer())) {
+        while (GameStatusEnum.PLAY.equals(roomInfo.getGameStatusEnum())){
+            if (playerInfo.getPlayerId().equals(roomInfo.getCurPlayerId())) {
                 System.out.println("");
                 System.out.println(playerInfo.getPlayerId() + "'s turn");
 
                 List<CardUnion> cardUnions = cardService.getUionList(playerInfo.getDdzCardList());
                 List<DdzCard> playCardList = null ;
-                if (roomInfo.getCurCards().isEmpty() ||
-                        roomInfo.getCurCardsOwner() == playerInfo.getPlayerId()){
+                if (roomInfo.getLastCards().isEmpty() ||
+                        roomInfo.getLastCardsOwner().equals(playerInfo.getPlayerId())){
                     playCardList = cardUnions.get(random.nextInt(cardUnions.size())).generateCardList();
                 }else {
                     int x =0;
-                    CardUnion curCardUnion = typeHandlerService.getCardType(roomInfo.getCurCards());
+                    CardUnion curCardUnion = typeHandlerService.getCardType(roomInfo.getLastCards());
                     for (CardUnion cardUnion: cardUnions){
                         if (cardUnion.getType().equals(curCardUnion.getType())
                                 && cardUnion.getValue() > curCardUnion.getValue()){
@@ -54,8 +54,8 @@ public class PlayerSimulator implements Runnable{
 
                 if (playCardList != null){
                     playerService.playCard(playerInfo, playCardList);
-                    roomInfo.setCurCards(playCardList);
-                    roomInfo.setCurCardsOwner(playerInfo.getPlayerId());
+                    roomInfo.setLastCards(playCardList);
+                    roomInfo.setLastCardsOwner(playerInfo.getPlayerId());
                     System.out.println("play：" + playCardList + ", rest:"
                             +  playerInfo.getDdzCardList());
                     if (playerInfo.getDdzCardList().isEmpty()){
@@ -65,7 +65,7 @@ public class PlayerSimulator implements Runnable{
                 } else {
                     System.out.println("player " + playerInfo.getPlayerId() + " pass");
                 }
-                roomInfo.setCurPlayer(nextPlayerId);
+                roomInfo.setCurPlayerId(nextPlayerId);
             } else {
                 try {
                     Thread.sleep(1000L);

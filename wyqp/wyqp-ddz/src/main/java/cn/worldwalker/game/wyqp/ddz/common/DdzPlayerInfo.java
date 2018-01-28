@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DdzPlayerInfo extends BasePlayerInfo{
+
     private Integer role;
     private List<DdzCard> ddzCardList = new ArrayList<>(20);
 
@@ -25,7 +26,6 @@ public class DdzPlayerInfo extends BasePlayerInfo{
     public void setDdzCardList(List<DdzCard> ddzCardList) {
         this.ddzCardList = ddzCardList;
     }
-
 
     @Override
     public String toString() {

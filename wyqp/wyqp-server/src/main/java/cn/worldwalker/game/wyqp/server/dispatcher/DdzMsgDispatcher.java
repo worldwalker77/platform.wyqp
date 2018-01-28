@@ -28,6 +28,9 @@ public class DdzMsgDispatcher extends BaseMsgDisPatcher{
             case ready:
                 ddzGameService.ready(ctx, request, userInfo);
                 break;
+            case callLandlord:
+                ddzGameService.callLandlord(ctx, request, userInfo);
+                break;
             case ddzCue:
                 ddzGameService.cue(ctx, request, userInfo);
                 break;

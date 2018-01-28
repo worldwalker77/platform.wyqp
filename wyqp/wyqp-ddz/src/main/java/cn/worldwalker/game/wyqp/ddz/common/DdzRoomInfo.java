@@ -9,11 +9,18 @@ import java.util.List;
 public class DdzRoomInfo extends BaseRoomInfo{
 
     private List<DdzPlayerInfo> playerList = new ArrayList<>(3);
+
     private GameStatusEnum gameStatusEnum = GameStatusEnum.WAIT;
-    private Integer curLord = 0;
-    private Integer curPlayer = 0;
-    private List<DdzCard> curCards = new ArrayList<>(20);
-    private Integer curCardsOwner = 0;
+
+    //地主相关
+    private Integer landlord = 0;
+    private Integer score = 0;
+    private Integer lastCaller = 0;
+    private Integer lastCallScore = 0;
+
+    //出牌相关
+    private List<DdzCard> lastCards = new ArrayList<>(20);
+    private Integer lastCardsOwner = 0;
 
 
     @Override
@@ -33,46 +40,51 @@ public class DdzRoomInfo extends BaseRoomInfo{
         this.gameStatusEnum = gameStatusEnum;
     }
 
-    public Integer getCurLord() {
-        return curLord;
+    public Integer getLandlord() {
+        return landlord;
     }
 
-    public void setCurLord(Integer curLord) {
-        this.curLord = curLord;
+    public void setLandlord(Integer landlord) {
+        this.landlord = landlord;
     }
 
-    public Integer getCurPlayer() {
-        return curPlayer;
+    public Integer getScore() {
+        return score;
     }
 
-    public void setCurPlayer(Integer curPlayer) {
-        this.curPlayer = curPlayer;
+    public void setScore(Integer score) {
+        this.score = score;
     }
 
-    public List<DdzCard> getCurCards() {
-        return curCards;
+    public Integer getLastCaller() {
+        return lastCaller;
     }
 
-    public void setCurCards(List<DdzCard> curCards) {
-        this.curCards = curCards;
+    public void setLastCaller(Integer lastCaller) {
+        this.lastCaller = lastCaller;
     }
 
-    public Integer getCurCardsOwner() {
-        return curCardsOwner;
+    public Integer getLastCallScore() {
+        return lastCallScore;
     }
 
-    public void setCurCardsOwner(Integer curCardsOwner) {
-        this.curCardsOwner = curCardsOwner;
+    public void setLastCallScore(Integer lastCallScore) {
+        this.lastCallScore = lastCallScore;
     }
 
+    public List<DdzCard> getLastCards() {
+        return lastCards;
+    }
 
-    @Override
-    public String toString() {
-        return "" +
-                ", " + gameStatusEnum +
-                ", lord=" + curLord +
-                ", curPlayer=" + curPlayer +
-                ", curCards=" + curCards +
-                ", curCardOwner=" + curCardsOwner ;
+    public void setLastCards(List<DdzCard> lastCards) {
+        this.lastCards = lastCards;
+    }
+
+    public Integer getLastCardsOwner() {
+        return lastCardsOwner;
+    }
+
+    public void setLastCardsOwner(Integer lastCardsOwner) {
+        this.lastCardsOwner = lastCardsOwner;
     }
 }

@@ -4,7 +4,8 @@ public enum PlayerStatusEnum {
 	
 	observer(0, "观察者"),
 	notReady(1, "未准备"),
-	ready(2, "已准备");
+	ready(2, "已准备"),
+    called(3,"已叫过地主");
 	
 	public Integer status;
 	public String desc;

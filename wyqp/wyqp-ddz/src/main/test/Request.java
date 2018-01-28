@@ -4,6 +4,7 @@ public class Request {
     private Integer msgType;
     private String token;
     private Integer gameType = 4;
+    private String ddzMsg;
     private JSONObject msg;
 
     public Integer getMsgType() {
@@ -28,6 +29,14 @@ public class Request {
 
     public void setGameType(Integer gameType) {
         this.gameType = gameType;
+    }
+
+    public String getDdzMsg() {
+        return ddzMsg;
+    }
+
+    public void setDdzMsg(String ddzMsg) {
+        this.ddzMsg = ddzMsg;
     }
 
     public JSONObject getMsg() {

@@ -10,8 +10,11 @@ public class Client {
     private Socket socket;
     private String token;
     private Integer roomId;
+    private Integer playerId;
     private List<Integer> cardList;
     private List<Integer> cueCardList;
+
+    private Boolean gameOver;
 
     public void init() throws Exception {
         socket = new Socket(new URI("ws://localhost:10007/websocket"),this);
@@ -22,7 +25,8 @@ public class Client {
             Thread.sleep(1000);
         }
         System.out.println("连接成功");
-        token = generateToken();
+        gameOver = false;
+        generateToken();
     }
 
     public void entryHall(){
@@ -45,13 +49,16 @@ public class Client {
         socket.sendMsg(JSON.toJSONString(request));
     }
 
-    public void playerIn(Integer roomId){
+    public void playerIn(int roomId /*, int roomIndex*/){
         Request request = new Request();
         request.setMsgType(6);
         request.setToken(token);
         JSONObject jsonMsg = new JSONObject(3);
         jsonMsg.put("roomId",roomId);
         request.setMsg(jsonMsg);
+//        JSONObject jsonDdzMsg = new JSONObject(3);
+//        jsonDdzMsg.put("roomIndex",roomIndex);
+//        request.setDdzMsg(JSON.toJSONString(jsonDdzMsg));
         socket.sendMsg(JSON.toJSONString(request));
     }
 
@@ -59,6 +66,16 @@ public class Client {
         Request request = new Request();
         request.setMsgType(7);
         request.setToken(token);
+        socket.sendMsg(JSON.toJSONString(request));
+    }
+
+    public void callLandlord(int score){
+        Request request = new Request();
+        request.setMsgType(401);
+        request.setToken(token);
+        JSONObject jsonDdzMsg = new JSONObject(1);
+        jsonDdzMsg.put("score",score);
+        request.setDdzMsg(JSON.toJSONString(jsonDdzMsg));
         socket.sendMsg(JSON.toJSONString(request));
     }
 
@@ -73,17 +90,17 @@ public class Client {
         Request request = new Request();
         request.setMsgType(404);
         request.setToken(token);
-        JSONObject jsonObject = new JSONObject(3);
-//        jsonObject.put("playCardList",cueCardList);
-        jsonObject.put("playCards","test");
-        jsonObject.put("chatMsg","fuck");
-        request.setMsg(jsonObject);
+        JSONObject jsonDdzMsg = new JSONObject(3);
+        jsonDdzMsg.put("playCards",cueCardList);
+        request.setDdzMsg(JSON.toJSONString(jsonDdzMsg));
         socket.sendMsg(JSON.toJSONString(request));
     }
-    private String generateToken() throws Exception {
+
+    private void generateToken() throws Exception {
         String ret = HttpClientUtils.get("http://localhost:8080/game/login");
         JSONObject jsonObject = JSON.parseObject(ret);
-        return  jsonObject.getJSONObject("data").getString("token");
+        token = jsonObject.getJSONObject("data").getString("token");
+        playerId = jsonObject.getJSONObject("data").getInteger("playerId");
     }
 
     public String getToken() {
@@ -112,5 +129,21 @@ public class Client {
 
     public void setCueCardList(List<Integer> cueCardList) {
         this.cueCardList = cueCardList;
+    }
+
+    public Integer getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(Integer playerId) {
+        this.playerId = playerId;
+    }
+
+    public Boolean getGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(Boolean gameOver) {
+        this.gameOver = gameOver;
     }
 }

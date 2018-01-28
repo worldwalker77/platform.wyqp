@@ -28,12 +28,12 @@ public class Simulator {
         ddzRoomInfo.getPlayerList().add(ddzPlayerInfo3);
 
         RoomService.getInstance().dealCard(ddzRoomInfo);
-        ddzRoomInfo.setCurLord(0);
+        ddzRoomInfo.setLandlord(0);
 
         PlayerSimulator playerSimulator1 = new PlayerSimulator(ddzPlayerInfo1,ddzRoomInfo,ddzPlayerInfo2.getPlayerId());
         PlayerSimulator playerSimulator2 = new PlayerSimulator(ddzPlayerInfo2,ddzRoomInfo,ddzPlayerInfo3.getPlayerId());
         PlayerSimulator playerSimulator3 = new PlayerSimulator(ddzPlayerInfo3,ddzRoomInfo,ddzPlayerInfo1.getPlayerId());
-        ddzRoomInfo.setCurPlayer(ddzPlayerInfo1.getPlayerId());
+        ddzRoomInfo.setCurPlayerId(ddzPlayerInfo1.getPlayerId());
 
         new Thread(playerSimulator1).start();
         new Thread(playerSimulator2).start();

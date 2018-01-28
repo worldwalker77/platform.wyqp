@@ -45,7 +45,7 @@ public class RoomService {
         } else {
             throw new IllegalArgumentException("已经开始");
         }
-        ddzRoomInfo.setGameStatusEnum(GameStatusEnum.RUN);
+        ddzRoomInfo.setGameStatusEnum(GameStatusEnum.PLAY);
     }
 
     public void dealRestCard(){
@@ -60,9 +60,9 @@ public class RoomService {
         return null;
     }
 
-    public boolean isAllPlayerReady(DdzRoomInfo ddzRoomInfo){
+    public boolean isAllPlayerDone(DdzRoomInfo ddzRoomInfo, PlayerStatusEnum statusEnum){
         for (DdzPlayerInfo ddzPlayerInfo : ddzRoomInfo.getPlayerList()){
-            if (!ddzPlayerInfo.getStatus().equals(PlayerStatusEnum.ready.status)){
+            if (!ddzPlayerInfo.getStatus().equals(statusEnum.status)){
                 return false;
             }
         }
