@@ -1,6 +1,5 @@
 package cn.worldwalker.game.wyqp.ddz;
 
-import cn.worldwalker.game.wyqp.common.utils.HttpClientUtils;
 import cn.worldwalker.game.wyqp.ddz.common.DdzPlayerInfo;
 import cn.worldwalker.game.wyqp.ddz.common.DdzRoomInfo;
 import cn.worldwalker.game.wyqp.ddz.service.RoomService;
@@ -10,12 +9,6 @@ public class Simulator {
 
     public static void main(String[] strings){
 
-        try {
-            String ret = HttpClientUtils.get("http://localhost:8080/game/login");
-            System.out.println(ret);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         DdzRoomInfo ddzRoomInfo = new DdzRoomInfo();
         DdzPlayerInfo ddzPlayerInfo1 = new DdzPlayerInfo();
         ddzPlayerInfo1.setPlayerId(10001);
@@ -35,9 +28,9 @@ public class Simulator {
         PlayerSimulator playerSimulator3 = new PlayerSimulator(ddzPlayerInfo3,ddzRoomInfo,ddzPlayerInfo1.getPlayerId());
         ddzRoomInfo.setCurPlayerId(ddzPlayerInfo1.getPlayerId());
 
-        new Thread(playerSimulator1).start();
-        new Thread(playerSimulator2).start();
-        new Thread(playerSimulator3).start();
-
+//        new Thread(playerSimulator1).start();
+//        new Thread(playerSimulator2).start();
+//        new Thread(playerSimulator3).start();
+//
     }
 }

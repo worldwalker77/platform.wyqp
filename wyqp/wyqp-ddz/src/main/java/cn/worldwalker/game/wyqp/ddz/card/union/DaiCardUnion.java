@@ -1,50 +1,34 @@
 package cn.worldwalker.game.wyqp.ddz.card.union;
 
-import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class DaiCardUnion implements CardUnion {
 
     private BaseCardUnion mainType;
-    private BaseCardUnion withType;
-    private int withTypeCnt;
+    private List<BaseCardUnion> withTypeList;
 
-    public DaiCardUnion(BaseCardUnion mainType, BaseCardUnion withType,
-                        int withTypeCnt) {
-        //三带一 和 四带二
-        if ((mainType.getCount() == 4 && withTypeCnt == 2) ||
-                (mainType.getCount() == 3 && withTypeCnt == 1)){
+    public DaiCardUnion(BaseCardUnion mainType, List<BaseCardUnion> withTypeList){
             this.mainType = mainType;
-            this.withType = withType;
-            this.withTypeCnt = withTypeCnt;
-        } else {
-            throw new IllegalArgumentException(mainType.getType() + "_" + withTypeCnt);
-        }
+            this.withTypeList = withTypeList;
     }
 
     @Override
-    public int getValue() {
+    public Integer getValue() {
         return mainType.getValue();
     }
 
     @Override
     public String getType(){
-        StringBuilder stringBuffer = new StringBuilder(mainType.getType());
-        for (int i=0;i<withTypeCnt;i++){
-//            stringBuffer.append("_").append(withType.getType());
-            stringBuffer.append("_").append("B");
-        }
-        return stringBuffer.toString();
+        return mainType.getType() + " 带" + withTypeList.size() + "个" + withTypeList.get(0).getType();
     }
 
     @Override
-    public List<DdzCard> generateCardList() {
-        List<DdzCard> cardList = new ArrayList<>(20);
-        cardList.addAll(mainType.generateCardList());
-        for (int i=0; i<withTypeCnt; i++){
-            cardList.addAll(withType.generateCardList());
+    public List<Integer> getCardList() {
+        List<Integer> cardList = new ArrayList<>(20);
+        cardList.addAll(mainType.getCardList());
+        for (BaseCardUnion baseCardUnion : withTypeList){
+            cardList.addAll(baseCardUnion.getCardList());
         }
         return cardList;
     }
@@ -52,15 +36,14 @@ public class DaiCardUnion implements CardUnion {
 
     @Override
     public String toString() {
-        return "" + mainType +
-                "_" + withType +
-                "_" + withTypeCnt;
+        return mainType.toString() + " 带" + withTypeList.toString();
     }
 
     public enum DaiEnum {
         SAN_DAI_YI(3,1,1),
         SAN_DAI_DUI(3,2,1),
-        SI_DAI_YI(4,1,2);
+        SI_DAI_YI(4,1,2),
+        SI_DAI_DUI(4,2,2);
 
         DaiEnum(int mainTypeCount, int withTypeCount, int withTypeCnt) {
             this.mainTypeCount = mainTypeCount;

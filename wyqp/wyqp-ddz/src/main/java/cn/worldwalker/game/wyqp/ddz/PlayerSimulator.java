@@ -1,6 +1,5 @@
 package cn.worldwalker.game.wyqp.ddz;
 
-import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
 import cn.worldwalker.game.wyqp.ddz.card.union.CardUnion;
 import cn.worldwalker.game.wyqp.ddz.common.DdzPlayerInfo;
 import cn.worldwalker.game.wyqp.ddz.common.DdzRoomInfo;
@@ -35,18 +34,18 @@ public class PlayerSimulator implements Runnable{
                 System.out.println("");
                 System.out.println(playerInfo.getPlayerId() + "'s turn");
 
-                List<CardUnion> cardUnions = cardService.getUionList(playerInfo.getDdzCardList());
-                List<DdzCard> playCardList = null ;
+                List<CardUnion> cardUnions = cardService.getUnionList(playerInfo.getDdzCardList());
+                List<Integer> playCardList = null ;
                 if (roomInfo.getLastCards().isEmpty() ||
                         roomInfo.getLastCardsOwner().equals(playerInfo.getPlayerId())){
-                    playCardList = cardUnions.get(random.nextInt(cardUnions.size())).generateCardList();
+                    playCardList = cardUnions.get(random.nextInt(cardUnions.size())).getCardList();
                 }else {
                     int x =0;
                     CardUnion curCardUnion = typeHandlerService.getCardType(roomInfo.getLastCards());
                     for (CardUnion cardUnion: cardUnions){
                         if (cardUnion.getType().equals(curCardUnion.getType())
                                 && cardUnion.getValue() > curCardUnion.getValue()){
-                            playCardList = cardUnion.generateCardList();
+                            playCardList = cardUnion.getCardList();
                             break;
                         }
                     }

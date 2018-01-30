@@ -1,6 +1,5 @@
 package cn.worldwalker.game.wyqp.ddz.handler;
 
-import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
 import cn.worldwalker.game.wyqp.ddz.card.union.CardUnion;
 
 import java.util.List;
@@ -25,8 +24,8 @@ public class TypeHandlerService {
         typeHandlerChain.setNextChain(sequenceCardsHandler);
     }
 
-    public CardUnion getCardType(List<DdzCard> ddzCardList){
-        return typeHandlerChain.getCardsType(ddzCardList);
+    public CardUnion getCardType(List<Integer> cardList){
+        return typeHandlerChain.getCardsType(cardList);
     }
 
 }

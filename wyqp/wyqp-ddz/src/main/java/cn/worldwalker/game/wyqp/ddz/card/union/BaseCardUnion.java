@@ -1,60 +1,42 @@
 package cn.worldwalker.game.wyqp.ddz.card.union;
 
-import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
+import cn.worldwalker.game.wyqp.ddz.service.CardService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BaseCardUnion implements CardUnion,Comparable<BaseCardUnion>{
-    private static int MAX = 15;
-    private static int MIN = 2;
 
-    private int value;
-    private int count;
+    private List<Integer> cardList;
 
-    public BaseCardUnion(int value, int count) {
-        if (value >= BaseCardUnion.MIN && value<= BaseCardUnion.MAX){
-            this.value = value;
-            this.count = count;
-        } else {
-            throw new IllegalArgumentException(value + "");
-        }
+    public BaseCardUnion(List<Integer> cardList){
+        this.cardList = cardList;
     }
 
     @Override
-    public int getValue() {
-        return value;
+    public Integer getValue() {
+        return CardService.getInstance().cardValue(cardList.get(0));
     }
 
     @Override
     public String getType() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i=0; i<count; i++){
-            stringBuilder.append("A");
-        }
-        return stringBuilder.toString();
+        return cardList.size() + "个";
     }
 
     @Override
-    public List<DdzCard> generateCardList() {
-        List<DdzCard> ddzCardList = new ArrayList<>(4);
-        for (int i = 0; i<count; i++){
-            ddzCardList.add(new DdzCard(value));
-        }
-        return ddzCardList;
-    }
-
-    public int getCount() {
-        return count;
+    public List<Integer> getCardList() {
+        return cardList;
     }
 
     @Override
     public int compareTo(BaseCardUnion o) {
-        return this.count == o.count ? (this.value - o.value) : (this.count - o.count);
+        return this.cardList.size() == o.cardList.size()
+                ? (this.getValue() - o.getValue())
+                : (this.cardList.size() - o.cardList.size());
     }
 
     @Override
     public String toString() {
-        return value + "*"  + count;
+        return  cardList.size()+ "个"  + getValue();
     }
+
 }

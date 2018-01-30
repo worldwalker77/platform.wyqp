@@ -1,54 +1,49 @@
 package cn.worldwalker.game.wyqp.ddz.card.union;
 
-import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class FeijiCardUnion implements CardUnion {
 
     private ShunCardUnion shunCardUnion;
-    private BaseCardUnion baseCardUnion;
-    private int withTypeCount;
+//    private List<BaseCardUnion> baseCardUnionList;
+    private BaseCardUnion baseCardUnion1;
+    private BaseCardUnion baseCardUnion2;
 
-    public FeijiCardUnion(ShunCardUnion shunCardUnion,
-                          BaseCardUnion baseCardUnion, int withTypeCount) {
-        if (shunCardUnion.getBaseType().getCount() == 3 &&
-                shunCardUnion.getSize() == 2 &&
-                (withTypeCount <=2 )) {
-            this.shunCardUnion = shunCardUnion;
-            this.baseCardUnion = baseCardUnion;
-            this.withTypeCount = withTypeCount;
-        } else {
-            throw new IllegalArgumentException(shunCardUnion + "with" + withTypeCount);
-        }
+    public FeijiCardUnion(ShunCardUnion shunCardUnion, List<BaseCardUnion> baseCardUnionList){
+//        if (shunCardUnion.getBaseType().getCount() == 3 &&
+//                shunCardUnion.getSize() == 2 &&
+//                (withTypeCount <=2 )) {
+        this.shunCardUnion = shunCardUnion;
+        this.baseCardUnion1 = baseCardUnionList.get(0);
+        this.baseCardUnion2= baseCardUnionList.get(1);
+//        } else {
+//            throw new IllegalArgumentException("" + shunCardUnion + baseCardUnion1 + baseCardUnion2);
+//        }
     }
 
     @Override
-    public int getValue() {
+    public Integer getValue() {
         return shunCardUnion.getValue();
     }
 
     @Override
     public String getType(){
-        return shunCardUnion.getType() + "_" + baseCardUnion.getType() + "_" +  withTypeCount;
+        return shunCardUnion.getType() + "带" + baseCardUnion1.getType() + "带" +  baseCardUnion2;
     }
 
     @Override
-    public List<DdzCard> generateCardList() {
-        List<DdzCard> cardList = new ArrayList<>(20);
-        cardList.addAll(shunCardUnion.generateCardList());
-        for (int i=0; i<withTypeCount; i++){
-            cardList.addAll(baseCardUnion.generateCardList());
-        }
-        return null;
+    public List<Integer> getCardList() {
+        List<Integer> cardList = new ArrayList<>(20);
+        cardList.addAll(shunCardUnion.getCardList());
+        cardList.addAll(baseCardUnion1.getCardList());
+        cardList.addAll(baseCardUnion2.getCardList());
+        return cardList;
     }
 
     @Override
     public String toString() {
-        return shunCardUnion +
-                "__" + baseCardUnion +
-                "x" + withTypeCount;
+        return shunCardUnion + " 带" + baseCardUnion1 + " 带" +  baseCardUnion2;
     }
 
     public enum FeijiEnum {

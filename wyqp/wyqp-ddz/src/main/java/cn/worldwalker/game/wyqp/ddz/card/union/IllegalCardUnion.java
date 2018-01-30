@@ -1,7 +1,5 @@
 package cn.worldwalker.game.wyqp.ddz.card.union;
 
-import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
-
 import java.util.List;
 
 public class IllegalCardUnion implements CardUnion {
@@ -15,7 +13,7 @@ public class IllegalCardUnion implements CardUnion {
     }
 
     @Override
-    public int getValue() {
+    public Integer getValue() {
         return -1;
     }
 
@@ -25,7 +23,7 @@ public class IllegalCardUnion implements CardUnion {
     }
 
     @Override
-    public List<DdzCard> generateCardList() {
+    public List<Integer> getCardList() {
         return null;
     }
 }

@@ -12,7 +12,6 @@ import cn.worldwalker.game.wyqp.common.exception.ExceptionEnum;
 import cn.worldwalker.game.wyqp.common.result.Result;
 import cn.worldwalker.game.wyqp.common.service.BaseGameService;
 import cn.worldwalker.game.wyqp.common.utils.GameUtil;
-import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
 import cn.worldwalker.game.wyqp.ddz.card.union.CardUnion;
 import cn.worldwalker.game.wyqp.ddz.common.DdzPlayerInfo;
 import cn.worldwalker.game.wyqp.ddz.common.DdzRequest;
@@ -128,10 +127,11 @@ public class DdzGameService extends BaseGameService {
             JSONObject jsonData = new JSONObject(5);
             jsonData.put("landlord", userInfo.getPlayerId());
             jsonData.put("score", score);
-            List<DdzCard> restCardList = new ArrayList<>(3);
-            restCardList.add(new DdzCard(2));
-            restCardList.add(new DdzCard(2));
-            restCardList.add(new DdzCard(2));
+            //todo 这个逻辑要加上
+            List<Integer> restCardList = new ArrayList<>(3);
+            restCardList.add(2);
+            restCardList.add(2);
+            restCardList.add(2);
             jsonData.put("restCardList",restCardList);
             result.setData(jsonData);
         } else  {
@@ -160,17 +160,17 @@ public class DdzGameService extends BaseGameService {
         DdzRoomInfo ddzRoomInfo = redisOperationService.getRoomInfoByRoomId(userInfo.getRoomId(), DdzRoomInfo.class);
 
         DdzPlayerInfo ddzPlayerInfo = roomService.getPlayerInfo(ddzRoomInfo, userInfo.getPlayerId());
-        List<CardUnion> cardUnions = cardService.getUionList(ddzPlayerInfo.getDdzCardList());
-        List<DdzCard> playCardList = null ;
+        List<CardUnion> cardUnions = cardService.getUnionList(ddzPlayerInfo.getDdzCardList());
+        List<Integer> playCardList = null;
         if (ddzRoomInfo.getLastCards().isEmpty() ||
                 ddzRoomInfo.getLastCardsOwner().equals(ddzPlayerInfo.getPlayerId())){
-            playCardList = cardUnions.get(random.nextInt(cardUnions.size())).generateCardList();
+            playCardList = cardUnions.get(random.nextInt(cardUnions.size())).getCardList();
         }else {
             CardUnion curCardUnion = typeHandlerService.getCardType(ddzRoomInfo.getLastCards());
             for (CardUnion cardUnion: cardUnions){
                 if (cardUnion.getType().equals(curCardUnion.getType())
                         && cardUnion.getValue() > curCardUnion.getValue()){
-                    playCardList = cardUnion.generateCardList();
+                    playCardList = cardUnion.getCardList();
                     break;
                 }
             }
@@ -193,13 +193,13 @@ public class DdzGameService extends BaseGameService {
         JSONObject jsonDdzMsg = JSON.parseObject(((DdzRequest)request).getDdzMsg());
         String playCards = jsonDdzMsg.getString("playCards");
         JSONArray jsonArray = (JSONArray) JSONObject.parse(playCards);
-        List<DdzCard> cardList = new ArrayList<>(jsonArray.size());
+        List<Integer> cardList = new ArrayList<>(jsonArray.size());
         DdzPlayerInfo ddzPlayerInfo = roomService.getPlayerInfo(ddzRoomInfo, userInfo.getPlayerId());
         if (jsonArray == null || jsonArray.isEmpty()){
 
         } else {
             for (Object o : jsonArray){
-                cardList.add(new DdzCard((Integer)o));
+                cardList.add((Integer)o);
             }
             playerService.playCard(ddzPlayerInfo, cardList);
             ddzRoomInfo.setLastCards(cardList);
@@ -218,6 +218,7 @@ public class DdzGameService extends BaseGameService {
             for (DdzPlayerInfo ddzPlayerInfo1 : ddzRoomInfo.getPlayerList()){
                 channelContainer.sendTextMsgByPlayerIds(result, ddzPlayerInfo1.getPlayerId());
             }
+            channelContainer.sendTextMsgByPlayerIds(result,userInfo.getPlayerId());
             return;
         }
 

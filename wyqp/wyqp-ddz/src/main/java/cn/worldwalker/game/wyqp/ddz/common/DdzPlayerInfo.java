@@ -1,7 +1,6 @@
 package cn.worldwalker.game.wyqp.ddz.common;
 
 import cn.worldwalker.game.wyqp.common.domain.base.BasePlayerInfo;
-import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.List;
 public class DdzPlayerInfo extends BasePlayerInfo{
 
     private Integer role;
-    private List<DdzCard> ddzCardList = new ArrayList<>(20);
+    private List<Integer> ddzCardList= new ArrayList<>(20);
 
     public Integer getRole() {
         return role;
@@ -19,11 +18,11 @@ public class DdzPlayerInfo extends BasePlayerInfo{
         this.role = role;
     }
 
-    public List<DdzCard> getDdzCardList() {
+    public List<Integer> getDdzCardList() {
         return ddzCardList;
     }
 
-    public void setDdzCardList(List<DdzCard> ddzCardList) {
+    public void setDdzCardList(List<Integer> ddzCardList) {
         this.ddzCardList = ddzCardList;
     }
 

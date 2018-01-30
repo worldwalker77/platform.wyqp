@@ -1,14 +1,15 @@
 package cn.worldwalker.game.wyqp.ddz.service;
 
-import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
 import cn.worldwalker.game.wyqp.ddz.common.DdzPlayerInfo;
 
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.Comparator;
 import java.util.List;
 
 public class PlayerService {
     private static PlayerService instance = new PlayerService();
+
+    private CardService cardService = CardService.getInstance();
 
     public static PlayerService getInstance(){
         return instance;
@@ -16,21 +17,32 @@ public class PlayerService {
 
     private PlayerService(){}
 
-    public void addCard(DdzPlayerInfo ddzPlayerInfo , DdzCard ddzCard){
-        ddzPlayerInfo.getDdzCardList().add(ddzCard);
-        Collections.sort(ddzPlayerInfo.getDdzCardList());
+    public void addCard(DdzPlayerInfo ddzPlayerInfo , Integer card ){
+        ddzPlayerInfo.getDdzCardList().add(card);
     }
 
-    public void playCard(DdzPlayerInfo ddzPlayerInfo, List<DdzCard> toPlayCardList){
+    public void sortCard(DdzPlayerInfo ddzPlayerInfo){
+        Collections.sort(ddzPlayerInfo.getDdzCardList(), new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return cardService.cardValue(o1) - cardService.cardValue(o2);
+            }
+        });
+
+    }
+
+    public void playCard(DdzPlayerInfo ddzPlayerInfo, List<Integer> toPlayCardList){
+        ddzPlayerInfo.getDdzCardList().removeAll(toPlayCardList);
+        /*
         for (DdzCard ddzCard : toPlayCardList){
-            Iterator<DdzCard> it = ddzPlayerInfo.getDdzCardList().iterator();
+            Iterator<Integer> it = ddzPlayerInfo.getDdzCardList().iterator();
             while (it.hasNext()) {
                 DdzCard ddzCard1 = it.next();
-                if (ddzCard.getValue() == ddzCard1.getValue()) {
+                if (ddzCard.cardValue() == ddzCard1.cardValue()) {
                     it.remove();
                 }
             }
         }
-
+        */
     }
 }

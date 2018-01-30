@@ -1,10 +1,9 @@
 package cn.worldwalker.game.wyqp.ddz.handler;
 
 
-import cn.worldwalker.game.wyqp.ddz.service.CardService;
-import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
 import cn.worldwalker.game.wyqp.ddz.card.union.CardUnion;
 import cn.worldwalker.game.wyqp.ddz.card.union.IllegalCardUnion;
+import cn.worldwalker.game.wyqp.ddz.service.CardService;
 
 import java.util.List;
 
@@ -17,9 +16,9 @@ public abstract class CardsHandlerChain {
 
     private CardsHandlerChain nextChain;
 
-    public abstract CardUnion getCardsType(List<DdzCard> ddzCardList);
+    public abstract CardUnion getCardsType(List<Integer> ddzCardList);
 
-    public CardUnion handler(List<DdzCard> ddzCardList) {
+    public CardUnion handler(List<Integer> ddzCardList) {
         CardUnion cardsInfo = getCardsType(ddzCardList);
         if ( cardsInfo !=  null && !cardsInfo.equals(IllegalCardUnion.getInstance())){
             return cardsInfo;

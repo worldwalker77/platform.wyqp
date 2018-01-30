@@ -25,6 +25,14 @@ public class Socket extends WebSocketClient implements Runnable{
         send(msg);
     }
 
+    public List<Integer> cardValue(List<Integer> cardList){
+        List<Integer> valueList = new ArrayList<>(cardList.size());
+        for (Integer index : cardList){
+            valueList.add(index>>2);
+        }
+        return valueList;
+    }
+
     @Override
     public void onOpen(ServerHandshake arg0) {
         System.out.println("打开链接");
@@ -41,20 +49,19 @@ public class Socket extends WebSocketClient implements Runnable{
             JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("cardList");
             List<Integer> cardList = new ArrayList<>(jsonArray.size());
             for (Object o: jsonArray) {
-                cardList.add(((JSONObject)o).getInteger("value"));
+                cardList.add((Integer) o );
             }
             client.setCardList(cardList);
-            System.out.println(client.getPlayerId() + ":allCardList:" + cardList);
+            System.out.println(client.getPlayerId() + ":allCardList:" + cardValue(cardList));
         } else if (msgType == 403){
             Integer  landlordId = jsonObject.getJSONObject("data").getInteger("landlord");
             if (landlordId.equals(client.getPlayerId())){
                 JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("restCardList");
                 List<Integer> cardList = client.getCardList();
                 for (Object o: jsonArray) {
-                    cardList.add(((JSONObject)o).getInteger("value"));
-                    cardList.add(((JSONObject)o).getInteger("value"));
+                    cardList.add((Integer) o);
                 }
-                System.out.println(client.getPlayerId() + ":allCardList:" + cardList);
+                System.out.println(client.getPlayerId() + ":allCardList:" + cardValue(cardList));
             }
 
         } else if (msgType == 406){
@@ -65,10 +72,11 @@ public class Socket extends WebSocketClient implements Runnable{
             } else {
                 List<Integer> cardList = new ArrayList<>(jsonArray.size());
                 for (Object o: jsonArray) {
-                    cardList.add(((JSONObject)o).getInteger("value"));
+                    cardList.add((Integer) o );
                 }
                 client.setCueCardList(cardList);
-                System.out.println(client.getPlayerId() + ":cueCardList:" + cardList);
+                System.out.println(client.getPlayerId() + ":cueCardList:" + cardValue(cardList)
+                + "  index:" + cardList);
             }
         } else if (msgType == 24){
             client.setGameOver(true);

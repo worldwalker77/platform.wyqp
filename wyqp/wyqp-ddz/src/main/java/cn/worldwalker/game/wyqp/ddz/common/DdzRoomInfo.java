@@ -1,7 +1,6 @@
 package cn.worldwalker.game.wyqp.ddz.common;
 
 import cn.worldwalker.game.wyqp.common.domain.base.BaseRoomInfo;
-import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ public class DdzRoomInfo extends BaseRoomInfo{
     private Integer lastCallScore = 0;
 
     //出牌相关
-    private List<DdzCard> lastCards = new ArrayList<>(20);
+    private List<Integer> lastCards = new ArrayList<>(20);
     private Integer lastCardsOwner = 0;
 
 
@@ -72,11 +71,11 @@ public class DdzRoomInfo extends BaseRoomInfo{
         this.lastCallScore = lastCallScore;
     }
 
-    public List<DdzCard> getLastCards() {
+    public List<Integer> getLastCards() {
         return lastCards;
     }
 
-    public void setLastCards(List<DdzCard> lastCards) {
+    public void setLastCards(List<Integer> lastCards) {
         this.lastCards = lastCards;
     }
 

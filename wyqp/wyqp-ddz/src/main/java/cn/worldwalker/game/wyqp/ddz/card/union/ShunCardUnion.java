@@ -1,57 +1,58 @@
 package cn.worldwalker.game.wyqp.ddz.card.union;
 
-import cn.worldwalker.game.wyqp.ddz.card.DdzCard;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class ShunCardUnion implements CardUnion {
 
-    private BaseCardUnion baseType;
-    private int size;
+    private List<BaseCardUnion> baseCardUnionList;
 
-    public ShunCardUnion(BaseCardUnion baseType, int size) {
-        if ( (baseType.getCount() == 1 && size >= 5) ||
-                (baseType.getCount() == 2 && size >= 3 ) ||
-                (baseType.getCount() == 3 && size >= 2 )){
-            this.baseType = baseType;
-            this.size = size;
-        }else {
-            throw new IllegalArgumentException(baseType.getType() + "->" + size);
-        }
+    public ShunCardUnion(List<BaseCardUnion> baseCardUnionList) {
+        this.baseCardUnionList = baseCardUnionList;
+//        int count = baseCardUnionList.get(0).getCardList().size();
+//        int size = baseCardUnionList.size();
+//        if ( (count  == 1 && size >= 5) ||
+//                (count == 2 && size >= 3 ) ||
+//                (count == 3 && size >= 2 )){
+//        }else {
+//            throw new IllegalArgumentException("" + baseCardUnionList);
+//        }
+    }
+
+    public List<BaseCardUnion> getBaseCardUnionList() {
+        return baseCardUnionList;
     }
 
     @Override
-    public int getValue() {
-        return baseType.getValue();
+    public Integer getValue() {
+        return baseCardUnionList.get(0).getValue();
     }
 
     @Override
     public String getType() {
-        return baseType.getType() + "->" + size ;
+        StringBuilder sb = new StringBuilder(baseCardUnionList.size());
+        for (BaseCardUnion baseCardUnion :baseCardUnionList){
+            sb.append(baseCardUnion.getType());
+        }
+        return sb.toString();
     }
 
     @Override
-    public List<DdzCard> generateCardList() {
-        List<DdzCard> cardList = new ArrayList<>(20);
-        for (int i=0; i<size; i++){
-            cardList.addAll( new BaseCardUnion(baseType.getValue()+i,
-                    baseType.getCount()).generateCardList());
+    public List<Integer> getCardList() {
+        List<Integer> cardList = new ArrayList<>(20);
+        for (BaseCardUnion baseCardUnion :baseCardUnionList){
+            cardList.addAll(baseCardUnion.getCardList());
         }
         return cardList;
     }
 
     @Override
     public String toString() {
-        return "" + baseType + "->" + size;
-    }
-
-    public BaseCardUnion getBaseType() {
-        return baseType;
-    }
-
-    public int getSize() {
-        return size;
+        StringBuilder sb = new StringBuilder(baseCardUnionList.size());
+        for (BaseCardUnion baseCardUnion :baseCardUnionList){
+            sb.append(baseCardUnion).append(" ");
+        }
+        return sb.toString();
     }
 
     public enum ShunEnum {
