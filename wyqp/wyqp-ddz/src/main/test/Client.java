@@ -49,16 +49,13 @@ public class Client {
         socket.sendMsg(JSON.toJSONString(request));
     }
 
-    public void playerIn(int roomId /*, int roomIndex*/){
+    public void playerIn(int roomId ){
         Request request = new Request();
         request.setMsgType(6);
         request.setToken(token);
         JSONObject jsonMsg = new JSONObject(3);
         jsonMsg.put("roomId",roomId);
         request.setMsg(jsonMsg);
-//        JSONObject jsonDdzMsg = new JSONObject(3);
-//        jsonDdzMsg.put("roomIndex",roomIndex);
-//        request.setDdzMsg(JSON.toJSONString(jsonDdzMsg));
         socket.sendMsg(JSON.toJSONString(request));
     }
 

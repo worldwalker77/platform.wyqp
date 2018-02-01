@@ -6,20 +6,13 @@ import java.util.List;
 public class FeijiCardUnion implements CardUnion {
 
     private ShunCardUnion shunCardUnion;
-//    private List<BaseCardUnion> baseCardUnionList;
     private BaseCardUnion baseCardUnion1;
     private BaseCardUnion baseCardUnion2;
 
     public FeijiCardUnion(ShunCardUnion shunCardUnion, List<BaseCardUnion> baseCardUnionList){
-//        if (shunCardUnion.getBaseType().getCount() == 3 &&
-//                shunCardUnion.getSize() == 2 &&
-//                (withTypeCount <=2 )) {
         this.shunCardUnion = shunCardUnion;
         this.baseCardUnion1 = baseCardUnionList.get(0);
         this.baseCardUnion2= baseCardUnionList.get(1);
-//        } else {
-//            throw new IllegalArgumentException("" + shunCardUnion + baseCardUnion1 + baseCardUnion2);
-//        }
     }
 
     @Override
@@ -39,6 +32,11 @@ public class FeijiCardUnion implements CardUnion {
         cardList.addAll(baseCardUnion1.getCardList());
         cardList.addAll(baseCardUnion2.getCardList());
         return cardList;
+    }
+
+    @Override
+    public boolean isBomb() {
+        return false;
     }
 
     @Override

@@ -9,14 +9,6 @@ public class ShunCardUnion implements CardUnion {
 
     public ShunCardUnion(List<BaseCardUnion> baseCardUnionList) {
         this.baseCardUnionList = baseCardUnionList;
-//        int count = baseCardUnionList.get(0).getCardList().size();
-//        int size = baseCardUnionList.size();
-//        if ( (count  == 1 && size >= 5) ||
-//                (count == 2 && size >= 3 ) ||
-//                (count == 3 && size >= 2 )){
-//        }else {
-//            throw new IllegalArgumentException("" + baseCardUnionList);
-//        }
     }
 
     public List<BaseCardUnion> getBaseCardUnionList() {
@@ -44,6 +36,11 @@ public class ShunCardUnion implements CardUnion {
             cardList.addAll(baseCardUnion.getCardList());
         }
         return cardList;
+    }
+
+    @Override
+    public boolean isBomb() {
+        return false;
     }
 
     @Override

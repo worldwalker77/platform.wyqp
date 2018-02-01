@@ -33,6 +33,11 @@ public class DaiCardUnion implements CardUnion {
         return cardList;
     }
 
+    @Override
+    public boolean isBomb() {
+        return false;
+    }
+
 
     @Override
     public String toString() {

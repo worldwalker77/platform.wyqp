@@ -9,4 +9,5 @@ public interface CardUnion {
     Integer getValue();
     String getType();
     List<Integer> getCardList();
+    boolean isBomb();
 }

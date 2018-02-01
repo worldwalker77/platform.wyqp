@@ -16,6 +16,11 @@ public class DdzRoomInfo extends BaseRoomInfo{
     private Integer score = 0;
     private Integer lastCaller = 0;
     private Integer lastCallScore = 0;
+    private Integer bombCnt = 0;
+
+    //底牌
+    private List<Integer> restCardList = new ArrayList<>(3);
+
 
     //出牌相关
     private List<Integer> lastCards = new ArrayList<>(20);
@@ -85,5 +90,21 @@ public class DdzRoomInfo extends BaseRoomInfo{
 
     public void setLastCardsOwner(Integer lastCardsOwner) {
         this.lastCardsOwner = lastCardsOwner;
+    }
+
+    public List<Integer> getRestCardList() {
+        return restCardList;
+    }
+
+    public void setRestCardList(List<Integer> restCardList) {
+        this.restCardList = restCardList;
+    }
+
+    public Integer getBombCnt() {
+        return bombCnt;
+    }
+
+    public void setBombCnt(Integer bombCnt) {
+        this.bombCnt = bombCnt;
     }
 }

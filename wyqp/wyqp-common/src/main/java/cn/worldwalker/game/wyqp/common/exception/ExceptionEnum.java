@@ -44,7 +44,14 @@ public enum ExceptionEnum {
 	STAKE_SCORE_ERROR_2(302, "你的跟注分数必须大于或等于前一个玩家跟注分数的两倍"),
 	STAKE_SCORE_ERROR_3(303, "你的跟注分数必须大于或等于前一个玩家的跟注分数一半"),
 	PLAYER_STATUS_ERROR_1(304, "当前玩家状态错误，必须是未看牌或者已看牌"),
-	MUST_WATCH_CARD(25, "玩家看牌才能参与比牌");
+	MUST_WATCH_CARD(25, "玩家看牌才能参与比牌"),
+
+    //斗地主
+    DDZ_NOT_YOUR_TURN(401, "抱歉，还没轮到你出牌"),
+    DDZ_ILLEGAL_PLAY(402, "你出的牌不合法"),
+
+
+    MAX(10000, "界限");
 
     public Integer   index;
     public String description;

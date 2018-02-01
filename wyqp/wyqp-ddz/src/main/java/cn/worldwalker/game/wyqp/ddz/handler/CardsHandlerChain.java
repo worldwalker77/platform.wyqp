@@ -23,7 +23,7 @@ public abstract class CardsHandlerChain {
         if ( cardsInfo !=  null && !cardsInfo.equals(IllegalCardUnion.getInstance())){
             return cardsInfo;
         }else {
-            return nextChain.handler(ddzCardList);
+            return nextChain == null ? IllegalCardUnion.getInstance() :nextChain.handler(ddzCardList);
         }
     }
 

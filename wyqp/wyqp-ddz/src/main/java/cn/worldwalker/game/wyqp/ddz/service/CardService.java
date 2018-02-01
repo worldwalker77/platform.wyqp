@@ -1,6 +1,7 @@
 package cn.worldwalker.game.wyqp.ddz.service;
 
 import cn.worldwalker.game.wyqp.ddz.card.union.*;
+import cn.worldwalker.game.wyqp.ddz.constant.DdzConstant;
 
 import java.util.*;
 
@@ -35,14 +36,55 @@ public class CardService {
         for (Map.Entry<Integer,List<Integer>> entry : valueCardMap.entrySet()){
             List<Integer> list = entry.getValue();
             for (int i=0; i<list.size(); i++){
-                baseCardUnionList.add(new BaseCardUnion(list.subList(0,i+1)));
+                BaseCardUnion baseCardUnion = BaseCardUnion.valueOf(list.subList(0,i+1));
+                if (baseCardUnion!=null){
+                    baseCardUnionList.add(baseCardUnion);
+                }else {
+                    System.out.println("ERRO:" + list + "," +i );
+                }
+
             }
         }
         Collections.sort(baseCardUnionList);
         return baseCardUnionList;
     }
 
-    private List<ShunCardUnion> getShunList(List<BaseCardUnion> baseCardUnionList){
+    public List<ShunCardUnion> getShunList2(List<BaseCardUnion> baseCardUnionList){
+        Map<Integer, List<BaseCardUnion>> map = new HashMap<>(4);
+
+        for (BaseCardUnion baseCardUnion: baseCardUnionList){
+            if (baseCardUnion.getValue() == DdzConstant.KING_VALUE)
+                continue;
+            Integer size = baseCardUnion.getCardList().size();
+            List<BaseCardUnion> list = map.get(size);
+            if (list == null){
+                list = new ArrayList<>(16);
+                map.put(size, list);
+            }
+            list.add(baseCardUnion);
+
+        }
+        List<ShunCardUnion> shunCardUnionList = new ArrayList<>(20);
+        for (ShunCardUnion.ShunEnum shunEnum : ShunCardUnion.ShunEnum.values()){
+            List<BaseCardUnion> list = map.get(shunEnum.getBasicCardCount());
+            if (list != null){
+                int maxLen = list.size();
+                for (int len=shunEnum.getMinLen(); len<=maxLen; len++){
+                    for (int i=0; i+len<=maxLen; i++){
+                        if (list.get(i).getValue() + len - 1 == list.get(i+len-1).getValue()){
+                            shunCardUnionList.add(new ShunCardUnion(
+                                    list.subList(i, i+len)));
+                        }
+                    }
+                }
+            }
+        }
+        return shunCardUnionList;
+    }
+
+    public List<ShunCardUnion> getShunList(List<BaseCardUnion> baseCardUnionList){
+        return getShunList2(baseCardUnionList);
+        /*
         List<ShunCardUnion> shunCardUnionList = new ArrayList<>(20);
         if (baseCardUnionList.size() > 1){
             for (ShunCardUnion.ShunEnum shunEnum : ShunCardUnion.ShunEnum.values()){
@@ -52,7 +94,8 @@ public class CardService {
                     BaseCardUnion base2 = baseCardUnionList.get(i);
                     if (base1.getCardList().size() == shunEnum.getBasicCardCount()
                             && base2.getCardList().size() == shunEnum.getBasicCardCount()
-                            && base1.getValue()+1 == base2.getValue()){
+                            && base1.getValue()+1 == base2.getValue()
+                            && base2.getValue() != DdzConstant.KING_VALUE){
                         len ++;
                     } else {
                         //begin + len - 1  = end
@@ -64,13 +107,23 @@ public class CardService {
                         }
                         len = 1;
                     }
+                    if (i == baseCardUnionList.size() -1){
+                        for (int shunSize=shunEnum.getMinLen(); shunSize<=len; shunSize++){
+                            for (int shunLastIndex=i; shunLastIndex-shunSize>=i-len; shunLastIndex--) {
+                                shunCardUnionList.add(new ShunCardUnion(
+                                        baseCardUnionList.subList(shunLastIndex-shunSize, shunLastIndex)));
+                            }
+                        }
+
+                    }
                 }
             }
         }
         return shunCardUnionList;
+        */
     }
 
-    private List<DaiCardUnion> getDaiList(List<BaseCardUnion> baseCardUnionList){
+    public List<DaiCardUnion> getDaiList(List<BaseCardUnion> baseCardUnionList){
         List<DaiCardUnion> daiCardUnionList = new ArrayList<>(20);
 //        Collections.sort(baseCardUnionList);
         for (DaiCardUnion.DaiEnum daiEnum : DaiCardUnion.DaiEnum.values()){
@@ -80,7 +133,8 @@ public class CardService {
                     int withTypeCnt = daiEnum.getWithTypeCnt();
                     List<BaseCardUnion> withTypeList = new ArrayList<>(2);
                     for (BaseCardUnion withBaseCardUnion : baseCardUnionList) {
-                        if (withBaseCardUnion.getCardList().size() == daiEnum.getWithTypeCount()) {
+                        if (withBaseCardUnion.getCardList().size() == daiEnum.getWithTypeCount()
+                                && !withBaseCardUnion.getValue().equals(mainBaseCardUnion.getValue())) {
                             withTypeList.add(withBaseCardUnion);
                             withTypeCnt--;
                             if (withTypeCnt == 0) {
@@ -97,8 +151,7 @@ public class CardService {
         return daiCardUnionList;
     }
 
-    private List<FeijiCardUnion> getFeiJiList(List<ShunCardUnion> shunCardUnionList,
-                                         List<BaseCardUnion> baseCardUnionList){
+    public List<FeijiCardUnion> getFeiJiList(List<ShunCardUnion> shunCardUnionList, List<BaseCardUnion> baseCardUnionList){
         List<FeijiCardUnion> feijiCardUnionList = new ArrayList<>(20);
         for (FeijiCardUnion.FeijiEnum feijiEnum : FeijiCardUnion.FeijiEnum.values()){
             for (ShunCardUnion shunCardUnion : shunCardUnionList){
@@ -107,7 +160,11 @@ public class CardService {
                     int cnt = 0;
                     List<BaseCardUnion> baseCardUnionList1 = new ArrayList<>(2);
                     for (BaseCardUnion baseCardUnion : baseCardUnionList){
-                        if (baseCardUnion.getCardList().size() == feijiEnum.getWithTypeCount()){
+                        if (baseCardUnion.getCardList().size() == feijiEnum.getWithTypeCount()
+                               && !baseCardUnion.getValue().equals(shunCardUnion.getValue())
+                                //飞机是两个三张
+                                && !baseCardUnion.getValue().equals(shunCardUnion.getValue()+1)
+                                ){
                             cnt++;
                             baseCardUnionList1.add(baseCardUnion);
                             if (cnt == feijiEnum.getWithTypeCnt()){
@@ -123,7 +180,6 @@ public class CardService {
         return feijiCardUnionList;
     }
 
-
     public List<CardUnion> getUnionList(List<Integer> ddzCardList){
         List<BaseCardUnion> baseCardUnionList = getBaseList(ddzCardList);
         List<ShunCardUnion> shunCardUnionList = getShunList(baseCardUnionList);
@@ -136,5 +192,14 @@ public class CardService {
         unionList.addAll(daiCardUnionList);
         unionList.addAll(feijiCardUnionList);
         return unionList;
+    }
+
+    public boolean isBigger(CardUnion cardUnion1, CardUnion cardUnion2){
+        if (cardUnion1.getType().equals(cardUnion2.getType())){
+            return cardUnion1.getValue() > cardUnion2.getValue();
+        } else if (cardUnion1.isBomb() && !cardUnion2.isBomb()){
+            return true;
+        }
+        return false;
     }
 }

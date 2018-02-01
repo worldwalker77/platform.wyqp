@@ -1,6 +1,6 @@
 public class ClientSimulator {
 
-    private static int waitTime = 100;
+    private static final int waitTime = 100;
 
 
     public static void main(String[] args) throws Exception {

@@ -26,4 +26,9 @@ public class IllegalCardUnion implements CardUnion {
     public List<Integer> getCardList() {
         return null;
     }
+
+    @Override
+    public boolean isBomb() {
+        return false;
+    }
 }

@@ -38,8 +38,15 @@ public class RoomService {
             Collections.shuffle(allDdzCards);
 
             //发牌，三家
-            for (int i = 0; i< allDdzCards.size(); i++){
+            for (int i = 0; i< 51; i++){
+//            for (int i = 0; i< 54; i++){
                 playerService.addCard((DdzPlayerInfo) playerList.get(i%3),allDdzCards.get(i));
+//                playerService.addCard((DdzPlayerInfo) playerList.get(0),allDdzCards.get(i));
+//                playerService.addCard((DdzPlayerInfo) playerList.get(1),allDdzCards.get(i));
+//                playerService.addCard((DdzPlayerInfo) playerList.get(2),allDdzCards.get(i));
+            }
+            for (int i=51; i<54; i++){
+                ddzRoomInfo.getRestCardList().add(allDdzCards.get(i));
             }
             //整理牌，排序
             for (int i=0; i<3; i++){
@@ -50,9 +57,6 @@ public class RoomService {
             throw new IllegalArgumentException("已经开始");
         }
         ddzRoomInfo.setGameStatusEnum(GameStatusEnum.PLAY);
-    }
-
-    public void dealRestCard(){
     }
 
     public DdzPlayerInfo getPlayerInfo(DdzRoomInfo ddzRoomInfo, Integer playerId){

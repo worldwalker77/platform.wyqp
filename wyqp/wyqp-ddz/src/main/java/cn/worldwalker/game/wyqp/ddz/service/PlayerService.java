@@ -3,7 +3,6 @@ package cn.worldwalker.game.wyqp.ddz.service;
 import cn.worldwalker.game.wyqp.ddz.common.DdzPlayerInfo;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class PlayerService {
@@ -22,27 +21,18 @@ public class PlayerService {
     }
 
     public void sortCard(DdzPlayerInfo ddzPlayerInfo){
-        Collections.sort(ddzPlayerInfo.getDdzCardList(), new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return cardService.cardValue(o1) - cardService.cardValue(o2);
-            }
-        });
+        Collections.sort(ddzPlayerInfo.getDdzCardList());
+//        , new Comparator<Integer>() {
+//            @Override
+//            public int compare(Integer o1, Integer o2) {
+//
+//                return cardService.cardValue(o1) - cardService.cardValue(o2);
+//            }
+//        });
 
     }
 
     public void playCard(DdzPlayerInfo ddzPlayerInfo, List<Integer> toPlayCardList){
         ddzPlayerInfo.getDdzCardList().removeAll(toPlayCardList);
-        /*
-        for (DdzCard ddzCard : toPlayCardList){
-            Iterator<Integer> it = ddzPlayerInfo.getDdzCardList().iterator();
-            while (it.hasNext()) {
-                DdzCard ddzCard1 = it.next();
-                if (ddzCard.cardValue() == ddzCard1.cardValue()) {
-                    it.remove();
-                }
-            }
-        }
-        */
     }
 }
